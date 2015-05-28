@@ -8,21 +8,33 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import tabs.SlidingTabLayout;
+
 
 public class MainActivity extends ActionBarActivity {
     private Toolbar toolbar;
+    private SlidingTabLayout mTabs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_appbar);
         toolbar = (Toolbar) findViewById(R.id.app_bar);
+
+
+        mTabs = (SlidingTabLayout) findViewById(R.id.tabs);
+
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         NavigationDrawerFragment drawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_fragment);
 
+//        FeatureFragment featureFragment = (FeatureFragment)
+//                getSupportFragmentManager().findFragmentById(R.id.feature_fragment);
+
         drawerFragment.setUp(R.id.navigation_fragment,(DrawerLayout)findViewById(R.id.drawer_layout), toolbar);
+
+
     }
 
     @Override

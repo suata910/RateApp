@@ -7,17 +7,25 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class NavigationDrawerFragment extends Fragment {
+    private RecyclerView recyclerView;
+    private VikaAdapter adapter;
+
     private static final String PREF_FILE_NAME = "testpreferences";
     private static final String KEY_USER_LEARNED_DRAWER = "user_learned_drawer";
 
@@ -45,8 +53,37 @@ public class NavigationDrawerFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_navigation_drawer, container, false);
+        View layout = inflater.inflate(R.layout.fragment_navigation_drawer, container, false);
+        recyclerView = (RecyclerView) layout.findViewById(R.id.drawerList);
+        adapter = new VikaAdapter(getActivity(),getData());
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        return layout;
     }
+
+    public static List<Feature> getData() {
+        List<Feature> data = new ArrayList<>();
+
+        int[] icons = {R.drawable.ic_number1, R.drawable.ic_number2,
+                R.drawable.ic_number3, R.drawable.ic_number4};
+
+        String[] titles = {"Item One", "Item Two", "Item Three", "Item Four"};
+
+//        for (int i = 0; i < titles.length && i < icons.length; i++) {
+//            Feature current = new Feature();
+//            current.iconID = icons[i];
+//            current.featureTitle = titles[i];
+//            data.add(current);
+//        }
+        for (int i = 0; i < 100; i++) {
+            Feature current = new Feature();
+            current.iconID = icons[i];
+            current.featureTitle = titles[i];
+            data.add(current);
+        }
+        return data;
+    }
+
 
 
     public void setUp(int fragmentID, DrawerLayout dLayout, Toolbar tBar) {

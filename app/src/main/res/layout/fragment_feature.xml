@@ -1,0 +1,24 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#EEE"
+    tools:context="com.sua.tavita.rateapp.FeatureFragment">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/featureList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </android.support.v7.widget.RecyclerView>
+
+    <fragment
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:name="com.sua.tavita.rateapp.FeatureFragment"
+        android:id="@+id/feature_fragment">
+
+    </fragment>
+
+</RelativeLayout>
