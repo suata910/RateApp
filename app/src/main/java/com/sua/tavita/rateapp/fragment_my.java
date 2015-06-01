@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 
+
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
@@ -17,6 +18,7 @@ import android.view.ViewGroup;
  * Use the {@link fragment_my#newInstance} factory method to
  * create an instance of this fragment.
  */
+
 public class fragment_my extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
