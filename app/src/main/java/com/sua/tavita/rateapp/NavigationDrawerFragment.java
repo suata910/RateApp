@@ -2,6 +2,7 @@ package com.sua.tavita.rateapp;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -22,7 +23,7 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class NavigationDrawerFragment extends Fragment {
+public class NavigationDrawerFragment extends Fragment implements VikaAdapter.ItemClickListener {
     private RecyclerView recyclerView;
     private VikaAdapter adapter;
 
@@ -55,7 +56,8 @@ public class NavigationDrawerFragment extends Fragment {
         // Inflate the layout for this fragment
         View layout = inflater.inflate(R.layout.fragment_navigation_drawer, container, false);
         recyclerView = (RecyclerView) layout.findViewById(R.id.drawerList);
-        adapter = new VikaAdapter(getActivity(),getData());
+        adapter = new VikaAdapter(getActivity(), getData());
+        adapter.setClickListener(this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         return layout;
@@ -77,13 +79,12 @@ public class NavigationDrawerFragment extends Fragment {
 //        }
         for (int i = 0; i < 100; i++) {
             Feature current = new Feature();
-            current.iconID = icons[i];
-            current.featureTitle = titles[i];
+            current.iconID = icons[i % icons.length];
+            current.featureTitle = titles[i % titles.length];
             data.add(current);
         }
         return data;
     }
-
 
 
     public void setUp(int fragmentID, DrawerLayout dLayout, Toolbar tBar) {
@@ -93,9 +94,9 @@ public class NavigationDrawerFragment extends Fragment {
             @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
-                if(!mUserLearnedDrawer){
+                if (!mUserLearnedDrawer) {
                     mUserLearnedDrawer = true;
-                    saveToPreferences(getActivity(),KEY_USER_LEARNED_DRAWER,mUserLearnedDrawer+"");
+                    saveToPreferences(getActivity(), KEY_USER_LEARNED_DRAWER, mUserLearnedDrawer + "");
                 }
                 getActivity().invalidateOptionsMenu();
             }
@@ -112,7 +113,7 @@ public class NavigationDrawerFragment extends Fragment {
                 Log.d("Vika", "offset " + slideOffset);
             }
         };
-        if(!mUserLearnedDrawer && !mFromSavedInstanceState){
+        if (!mUserLearnedDrawer && !mFromSavedInstanceState) {
             mDrawerLayout.openDrawer(containerView);
         }
         mDrawerLayout.setDrawerListener(mDrawerToggle);
@@ -134,5 +135,10 @@ public class NavigationDrawerFragment extends Fragment {
     public static String readFromPreferences(Context context, String preferenceName, String defaultValue) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(PREF_FILE_NAME, context.MODE_PRIVATE);
         return sharedPreferences.getString(preferenceName, defaultValue);
+    }
+
+    @Override
+    public void itemClicked(View view, int position) {
+        startActivity(new Intent(getActivity(), TestReview.class));
     }
 }

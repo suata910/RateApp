@@ -9,7 +9,7 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#A9DDD6">
+        >
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/drawerList"
