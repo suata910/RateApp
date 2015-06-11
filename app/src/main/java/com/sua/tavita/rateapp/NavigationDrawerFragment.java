@@ -139,6 +139,6 @@ public class NavigationDrawerFragment extends Fragment implements VikaAdapter.It
 
     @Override
     public void itemClicked(View view, int position) {
-        startActivity(new Intent(getActivity(), TestReview.class));
+        startActivity(new Intent(getActivity(), MainActivity.class));
     }
 }

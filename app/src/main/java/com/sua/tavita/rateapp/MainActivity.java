@@ -23,19 +23,30 @@ import tabs.SlidingTabLayout;
 public class MainActivity extends ActionBarActivity {
     private static final String KEY_POSITION = "position";
     private static final int PAGE_COUNT = 3;
+    private static final String TAG = "Vika";
 
-
+    VikaHelper vikaHelper;
     private Toolbar toolbar;
     private SlidingTabLayout mTabs;
     private ViewPager mPager;
+//    private RippleView rippleView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        vikaHelper = new VikaHelper(this);
+        vikaHelper.getWritableDatabase();
         toolbar = (Toolbar) findViewById(R.id.app_bar);
+//        rippleView = (RippleView)findViewById(R.id.ripple);
 
 
+//        rippleView.setOnRippleCompleteListener(new RippleView.OnRippleCompleteListener(){
+//            @Override
+//            public void onComplete(RippleView rippleView) {
+//                Log.d(TAG, "Ripple Completed " + rippleView);
+//            }
+//        });
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         NavigationDrawerFragment drawerFragment = (NavigationDrawerFragment)
@@ -48,6 +59,9 @@ public class MainActivity extends ActionBarActivity {
         mTabs = (SlidingTabLayout) findViewById(R.id.tabs);
         mPager = (ViewPager) findViewById(R.id.pager);
         mPager.setAdapter(new MyPagerAdapter(getSupportFragmentManager()));
+        mTabs.setDistributeEvenly(true);
+        mTabs.setBackgroundColor(getResources().getColor(R.color.primaryColor));
+        mTabs.setSelectedIndicatorColors(getResources().getColor(R.color.accentColor));
         mTabs.setViewPager(mPager);
 
     }
@@ -89,8 +103,7 @@ public class MainActivity extends ActionBarActivity {
 
         @Override
         public Fragment getItem(int position) {
-            MyFragment myFragment = MyFragment.getInstance(position);
-            return myFragment;
+            return MyFragment.getInstance(position);
         }
 
         @Override
