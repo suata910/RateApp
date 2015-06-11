@@ -13,9 +13,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-/**
- * A simple {@link Fragment} subclass.
- */
+class Feature {
+    int iconID; //represents resourceID
+    String featureTitle;
+}
 public class FeatureFragment extends Fragment {
     private RecyclerView recyclerView;
     private VikaAdapter adapter;

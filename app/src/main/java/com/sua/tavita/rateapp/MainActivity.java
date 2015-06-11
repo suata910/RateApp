@@ -10,12 +10,9 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import tabs.SlidingTabLayout;
 
@@ -38,6 +35,7 @@ public class MainActivity extends ActionBarActivity {
         vikaHelper = new VikaHelper(this);
         vikaHelper.getWritableDatabase();
         toolbar = (Toolbar) findViewById(R.id.app_bar);
+
 //        rippleView = (RippleView)findViewById(R.id.ripple);
 
 
@@ -66,29 +64,6 @@ public class MainActivity extends ActionBarActivity {
 
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            Toast.makeText(this, "you just hit " + item.getTitle(), Toast.LENGTH_SHORT).show();
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
 
     class MyPagerAdapter extends FragmentPagerAdapter {
         String[] tabs = getResources().getStringArray(R.array.tabs);
@@ -103,7 +78,16 @@ public class MainActivity extends ActionBarActivity {
 
         @Override
         public Fragment getItem(int position) {
-            return MyFragment.getInstance(position);
+            Fragment fragment = null;
+//            return MyFragment.getInstance(position);
+            if (position == 0) {
+                fragment = new FragmentA();
+            } else if (position == 1) {
+                fragment = new FragmentB();
+            } else {
+                fragment = new FragmentC();
+            }
+            return fragment;
         }
 
         @Override
