@@ -33,7 +33,6 @@ public class VikaHelper extends SQLiteOpenHelper {
     private static final String AGE = "Age";
     private static final String GENDER = "Gender";
 
-
     private Context context;
 
     private static final String CREATE_TABLE0 = "CREATE TABLE " + FEATURE_TABLE + "(" + FID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
