@@ -10,14 +10,14 @@ import android.util.Log;
  * Created by Tavita on 03/06/2015.
  */
 public class VikaHelper extends SQLiteOpenHelper {
-    private static final String DATABASE_NAME = "rateappdatabase";
+    private static final String DATABASE_NAME = "RateAppDatabase";
     private static final int DATABASE_VERSION = 1;
-    private static final String TABLE_FEATURE = "feature";
-    private static final String TABLE_ISSUE = "issue";
-    private static final String FID = "fid";
-    private static final String FEATURE_NAME = "feature_name";
+    private static final String TABLE_FEATURE = "Feature";
+    private static final String TABLE_ISSUE = "Issue";
+    private static final String FID = "FID";
+    private static final String FEATURE_NAME = "Feature_Name";
     private static final String UID = "_id";
-    private static final String ISSUE_DESCRIPTION = "issue_description";
+    private static final String ISSUE_DESCRIPTION = "Issue_Description";
     private Context context;
 
     private static final String CREATE_TABLE_0 = "CREATE TABLE " + TABLE_FEATURE + "(" + FID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
