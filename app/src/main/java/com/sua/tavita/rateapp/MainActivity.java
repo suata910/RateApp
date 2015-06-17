@@ -22,7 +22,6 @@ public class MainActivity extends ActionBarActivity {
     private static final int PAGE_COUNT = 3;
     private static final String TAG = "Vika";
 
-    VikaHelper vikaHelper;
     private Toolbar toolbar;
     private SlidingTabLayout mTabs;
     private ViewPager mPager;
@@ -32,26 +31,11 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        vikaHelper = new VikaHelper(this);
-        vikaHelper.getWritableDatabase();
         toolbar = (Toolbar) findViewById(R.id.app_bar);
-
-//        rippleView = (RippleView)findViewById(R.id.ripple);
-
-
-//        rippleView.setOnRippleCompleteListener(new RippleView.OnRippleCompleteListener(){
-//            @Override
-//            public void onComplete(RippleView rippleView) {
-//                Log.d(TAG, "Ripple Completed " + rippleView);
-//            }
-//        });
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         NavigationDrawerFragment drawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_fragment);
-
-//        FeatureFragment featureFragment = (FeatureFragment)
-//                getSupportFragmentManager().findFragmentById(R.id.feature_fragment);
 
         drawerFragment.setUp(R.id.navigation_fragment, (DrawerLayout) findViewById(R.id.drawer_layout), toolbar);
         mTabs = (SlidingTabLayout) findViewById(R.id.tabs);
@@ -83,7 +67,8 @@ public class MainActivity extends ActionBarActivity {
             if (position == 0) {
                 fragment = new FragmentA();
             } else if (position == 1) {
-                fragment = new FragmentB();
+//                fragment = new FragmentB();
+            fragment = new FeatureFragment();
             } else {
                 fragment = new FragmentC();
             }

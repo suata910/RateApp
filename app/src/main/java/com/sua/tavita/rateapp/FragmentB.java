@@ -41,7 +41,7 @@ public class FragmentB extends Fragment implements AdapterView.OnItemClickListen
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.fragment_b, container, false);
         listView = (ListView) layout.findViewById(R.id.listView);
-        listView.setAdapter(new ListAdapter(getActivity(), getData()));
+        listView.setAdapter(new ListViewAdapter(getActivity(), getData()));
         listView.setOnItemClickListener(this);
 //        listView.setClickable(true);
 

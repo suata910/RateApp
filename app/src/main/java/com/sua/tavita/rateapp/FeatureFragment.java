@@ -1,6 +1,7 @@
 package com.sua.tavita.rateapp;
 
 
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,9 +18,10 @@ class Feature {
     int iconID; //represents resourceID
     String featureTitle;
 }
-public class FeatureFragment extends Fragment {
+public class FeatureFragment extends Fragment{
     private RecyclerView recyclerView;
     private VikaAdapter adapter;
+    private VikaHelper vikaHelper;
 
     public FeatureFragment() {
         // Required empty public constructor
@@ -28,10 +30,12 @@ public class FeatureFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View layout = inflater.inflate(R.layout.fragment_feature, container, false);
-
+        View layout = inflater.inflate(R.layout.fragment_b, container, false);
+        vikaHelper = new VikaHelper(getActivity());
+        SQLiteDatabase sqLiteDatabase = vikaHelper.getWritableDatabase();
         recyclerView = (RecyclerView) layout.findViewById(R.id.featureList);
         adapter = new VikaAdapter(getActivity(),getData());
+//        adapter.setClickListener(this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
@@ -58,4 +62,9 @@ public class FeatureFragment extends Fragment {
     }
 
 
+//    @Override
+//    public void itemClicked(View view, int position) {
+//
+//        Message.message(getActivity(), "selected item " + position);
+//    }
 }

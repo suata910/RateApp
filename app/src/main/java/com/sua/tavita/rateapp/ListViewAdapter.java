@@ -15,12 +15,12 @@ import java.util.List;
  */
 
 
-public class ListAdapter extends BaseAdapter {
+public class ListViewAdapter extends BaseAdapter {
     Context context;
 //    private LayoutInflater inflater;
     List<AppFeature> list;
 
-    public ListAdapter(Context context, List<AppFeature> data) {
+    public ListViewAdapter(Context context, List<AppFeature> data) {
         this.list = data;
         this.context = context;
 //        inflater = LayoutInflater.from(context);

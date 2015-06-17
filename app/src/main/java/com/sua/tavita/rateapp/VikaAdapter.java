@@ -2,7 +2,6 @@ package com.sua.tavita.rateapp;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,16 +39,15 @@ public class VikaAdapter extends RecyclerView.Adapter<VikaAdapter.MyViewHolder> 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = inflater.inflate(R.layout.custom_row, parent, false);
-        Log.d("Vika", "onCreateViewHolder called ");
+//        Log.d("Vika", "onCreateViewHolder called ");
         MyViewHolder holder = new MyViewHolder(view);
-
         return holder;
     }
 
     @Override
     public void onBindViewHolder(MyViewHolder holder,  int position) {
         Feature currentFeature = data.get(position);
-        Log.d(TAG, "onBindViewHolder called " + position);
+//        Log.d(TAG, "onBindViewHolder called " + position);
         holder.title.setText(currentFeature.featureTitle);
         holder.icon.setImageResource(currentFeature.iconID);
     }
@@ -74,9 +72,6 @@ public class VikaAdapter extends RecyclerView.Adapter<VikaAdapter.MyViewHolder> 
 
         @Override
         public void onClick(View view) {
-//            Toast.makeText(view.getContext(), "Item clicked at " + getLayoutPosition(), Toast.LENGTH_SHORT).show();
-//        delete(getLayoutPosition());
-//        context.startActivity(new Intent(context, TestReview.class));
             if(clickListener!=null){
                 clickListener.itemClicked(view, getAdapterPosition());
             }
@@ -84,6 +79,7 @@ public class VikaAdapter extends RecyclerView.Adapter<VikaAdapter.MyViewHolder> 
     }
 
     public interface ItemClickListener{
+
         public void itemClicked(View view, int position);
     }
 }
