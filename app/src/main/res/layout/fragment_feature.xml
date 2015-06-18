@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#EEE"
-    tools:context="com.sua.tavita.rateapp.FeatureFragment">
+    tools:context="com.sua.tavita.rateapp.FragmentB">
 
     <!--<android.support.v7.widget.RecyclerView-->
         <!--android:id="@+id/featureList"-->
@@ -16,7 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:name="com.sua.tavita.rateapp.FeatureFragment"
+        android:name="com.sua.tavita.rateapp.FragmentB"
         android:id="@+id/feature_fragment">
 
     </fragment>

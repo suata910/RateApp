@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -23,9 +24,9 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class NavigationDrawerFragment extends Fragment implements VikaAdapter.ItemClickListener {
+public class NavigationDrawerFragment extends Fragment {
     private RecyclerView recyclerView;
-    private VikaAdapter adapter;
+    private RecycleViewAdapter adapter;
 
     private static final String PREF_FILE_NAME = "testpreferences";
     private static final String KEY_USER_LEARNED_DRAWER = "user_learned_drawer";
@@ -56,11 +57,28 @@ public class NavigationDrawerFragment extends Fragment implements VikaAdapter.It
         // Inflate the layout for this fragment
         View layout = inflater.inflate(R.layout.fragment_navigation_drawer, container, false);
         recyclerView = (RecyclerView) layout.findViewById(R.id.drawerList);
-        adapter = new VikaAdapter(getActivity(), getData());
-        adapter.setClickListener(this);
+        adapter = new RecycleViewAdapter(getActivity(), getData());
+
+        return layout;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        return layout;
+        recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), recyclerView, new RecyclerItemClickListener.OnItemClickListener1() {
+            @Override
+            public void onItemClick(View view, int position) {
+                Intent i = new Intent();
+                i.setClass(getActivity(), MainActivity.class);
+            }
+
+            @Override
+            public void onItemLongClick(View view, int position) {
+                Log.d("vika", "you clicked an item");
+            }
+        }));
     }
 
     public static List<Feature> getData() {
@@ -71,18 +89,18 @@ public class NavigationDrawerFragment extends Fragment implements VikaAdapter.It
 
         String[] titles = {"Item One", "Item Two", "Item Three", "Item Four"};
 
-//        for (int i = 0; i < titles.length && i < icons.length; i++) {
-//            Feature current = new Feature();
-//            current.iconID = icons[i];
-//            current.featureTitle = titles[i];
-//            data.add(current);
-//        }
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < titles.length && i < icons.length; i++) {
             Feature current = new Feature();
-            current.iconID = icons[i % icons.length];
-            current.featureTitle = titles[i % titles.length];
+            current.iconID = icons[i];
+            current.featureTitle = titles[i];
             data.add(current);
         }
+//        for (int i = 0; i < 100; i++) {
+//            Feature current = new Feature();
+//            current.iconID = icons[i % icons.length];
+//            current.featureTitle = titles[i % titles.length];
+//            data.add(current);
+//        }
         return data;
     }
 
@@ -137,8 +155,4 @@ public class NavigationDrawerFragment extends Fragment implements VikaAdapter.It
         return sharedPreferences.getString(preferenceName, defaultValue);
     }
 
-    @Override
-    public void itemClicked(View view, int position) {
-        startActivity(new Intent(getActivity(), MainActivity.class));
-    }
 }

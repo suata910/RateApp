@@ -14,21 +14,16 @@ import java.util.List;
 /**
  * Created by Teuila on 27/05/15.
  */
-public class VikaAdapter extends RecyclerView.Adapter<VikaAdapter.MyViewHolder> {
+public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.MyViewHolder>{
     private static final String TAG = "Vika";
     private LayoutInflater inflater;
     List<Feature> data = Collections.emptyList();
     private Context context;
-    private ItemClickListener clickListener;
 
-    public VikaAdapter(Context context, List<Feature> data){
+    public RecycleViewAdapter(Context context, List<Feature> data){
         this.context = context;
         inflater = LayoutInflater.from(context);
         this.data = data;
-    }
-
-    public void setClickListener(ItemClickListener clickListener){
-        this.clickListener = clickListener;
     }
 
     public void delete(int position){
@@ -58,28 +53,17 @@ public class VikaAdapter extends RecyclerView.Adapter<VikaAdapter.MyViewHolder> 
         return data.size();
     }
 
-    class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    class MyViewHolder extends RecyclerView.ViewHolder {
         TextView title;
         ImageView icon;
 
         public MyViewHolder(View itemView) {
             super(itemView);
-            itemView.setOnClickListener(this);
+            itemView.setClickable(true);
             title = (TextView) itemView.findViewById(R.id.listText);
             icon = (ImageView) itemView.findViewById(R.id.listIcon);
-            icon.setOnClickListener(this);
         }
 
-        @Override
-        public void onClick(View view) {
-            if(clickListener!=null){
-                clickListener.itemClicked(view, getAdapterPosition());
-            }
-        }
     }
 
-    public interface ItemClickListener{
-
-        public void itemClicked(View view, int position);
-    }
 }

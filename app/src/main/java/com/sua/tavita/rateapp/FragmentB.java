@@ -1,78 +1,126 @@
 package com.sua.tavita.rateapp;
 
+
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ListView;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Teuila on 12/06/15.
- */
-class AppFeature {
-    String title;
-    int img;
 
-    public AppFeature() {
-    }
-
-    public AppFeature(String title, int img) {
-        this.title = title;
-        this.img = img;
-    }
-
-    public String getTitle() {
-        return title;
-    }
+class Feature {
+    int iconID; //represents resourceID
+    String featureTitle;
 }
 
-public class FragmentB extends Fragment implements AdapterView.OnItemClickListener{
-    private ListView listView;
-    private TextView txt;
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View layout = inflater.inflate(R.layout.fragment_b, container, false);
-        listView = (ListView) layout.findViewById(R.id.listView);
-        listView.setAdapter(new ListViewAdapter(getActivity(), getData()));
-        listView.setOnItemClickListener(this);
-//        listView.setClickable(true);
+public class FragmentB extends Fragment {
+    private RecyclerView recyclerView;
+    private RecycleViewAdapter adapter;
+    private DatabaseAdapter vikaHelper;
+    private IssuesDialogFragment fr;
+    private List<Integer> mSelectedItems;
 
-        return layout;
-        
+
+    public FragmentB() {
+        // Required empty public constructor
     }
 
-    public static List<AppFeature> getData() {
-        List<AppFeature> data = new ArrayList<>();
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             final Bundle savedInstanceState) {
+        View layout = inflater.inflate(R.layout.fragment_b, container, false);
+        vikaHelper = new DatabaseAdapter(getActivity());
+        recyclerView = (RecyclerView) layout.findViewById(R.id.featureList);
+        adapter = new RecycleViewAdapter(getActivity(), getData());
+        fr = new IssuesDialogFragment();
+        mSelectedItems = new ArrayList<>();
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), recyclerView, new RecyclerItemClickListener.OnItemClickListener1() {
+            @Override
+            public void onItemClick(View view, int position) {
+                Log.d("Vika", "item " + position + " was clicked");
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle(R.string.dialog_message)
+                        .setMultiChoiceItems(R.array.GPS_issues, null, new DialogInterface.OnMultiChoiceClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i, boolean isChecked) {
+                                if (isChecked) {
+                                    mSelectedItems.add(i);
+                                } else if (mSelectedItems.contains(i)) {
+                                    mSelectedItems.remove(Integer.valueOf(i));
+                                }
+                            }
+                        })
+                        .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int id) {
+                                // User clicked OK, so save the mSelectedItems results somewhere
+                                // or return them to the component that opened the dialog
+                                dialog.dismiss();
+                            }
+                        }).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.dismiss();
+                    }
+                }).create().show();
+            }
 
-        int[] icons = {R.drawable.ic_battery, R.drawable.ic_data,
-                R.drawable.ic_distance, R.drawable.ic_gps, R.drawable.ic_location, R.drawable.ic_maps,
-                R.drawable.ic_signal, R.drawable.ic_support, R.drawable.ic_time, R.drawable.ic_version};
+            @Override
+            public void onItemLongClick(View view, int position) {
+                Message.message(getActivity(), "that was a long click");
+            }
+        }));
+        return layout;
+    }
 
-        String[] titles = {"Battery", "Data", "Distance", "GPS", "Location", "Maps", "Signal",
-                "Support", "Time", "Version"};
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+    }
+
+    public void databaseSetup() {
+        String[] features = {"GPS", "Time", "Map", "Signal", "Data", "Distance", "Battery",
+                "Support", "Location", "Version"};
+        for (String feature : features) {
+            long id = vikaHelper.insertFeature(feature);
+            if (id < 0) {
+                Log.d("Vika", "successfully inserted feature");
+            } else {
+                Log.d("Vika", "Unsuccessful");
+
+            }
+        }
+
+    }
+
+    public static List<Feature> getData() {
+        List<Feature> data = new ArrayList<>();
+
+        int[] icons = {R.drawable.ic_gps, R.drawable.ic_time,
+                R.drawable.ic_maps, R.drawable.ic_signal, R.drawable.ic_data, R.drawable.ic_distance,
+                R.drawable.ic_battery, R.drawable.ic_support, R.drawable.ic_location, R.drawable.ic_version};
+
+        String[] titles = {"GPS", "Time", "Map", "Signal", "Data", "Distance", "Battery",
+                "Support", "Location", "Version"};
 
         for (int i = 0; i < titles.length && i < icons.length; i++) {
-            AppFeature current = new AppFeature();
-            current.img = icons[i];
-            current.title = titles[i];
+            Feature current = new Feature();
+            current.iconID = icons[i];
+            current.featureTitle = titles[i];
             data.add(current);
         }
         return data;
     }
 
-    @Override
-    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        int atPosition = (int) listView.getItemIdAtPosition(i);
-        Object o = listView.getItemAtPosition(i);
-        AppFeature a = (AppFeature) o;
-        Message.message(getActivity(), a.getTitle() + ""+ atPosition);
-    }
 }
