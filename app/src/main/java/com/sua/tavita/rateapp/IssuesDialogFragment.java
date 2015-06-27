@@ -6,6 +6,8 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 
+import com.sua.tavita.rateapp.tables.Issue;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,13 +16,32 @@ import java.util.List;
  */
 public class IssuesDialogFragment extends DialogFragment {
     List<Integer> mSelectedItems;
+    IssueRepo repo;
+    ArrayList<Issue> is;
+    ArrayList<String> dialogItems;
+    Issue a;
+
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+        repo = new IssueRepo(getActivity());
+        is = repo.getIssuesByID(7);
+        a = new Issue();
+        String s = "";
+        for(Issue i: is){
+            s = i.getIssue_description();
+            dialogItems.add(s);
+        }
+
+
+        CharSequence[] items = new String[dialogItems.size()];
+        dialogItems.toArray(items);
+
         mSelectedItems = new ArrayList<>();
+
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(R.string.dialog_message)
-                .setMultiChoiceItems(R.array.GPS_issues, null, new DialogInterface.OnMultiChoiceClickListener() {
+                .setMultiChoiceItems(items, null, new DialogInterface.OnMultiChoiceClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i, boolean isChecked) {
                         if (isChecked) {

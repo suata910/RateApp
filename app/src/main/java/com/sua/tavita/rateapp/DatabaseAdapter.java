@@ -21,8 +21,7 @@ public class DatabaseAdapter {
         SQLiteDatabase db = helper.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(DatabaseHelper.FEATURE_NAME, feature);
-        long id = db.insert(DatabaseHelper.FEATURE_TABLE, null, contentValues);
-        return id;
+        return db.insert(DatabaseHelper.FEATURE_TABLE, null, contentValues);
     }
 
     public void insertIssue(String issue, int relatedFeature){
@@ -32,7 +31,7 @@ public class DatabaseAdapter {
    static class DatabaseHelper extends SQLiteOpenHelper{
 
        private static final String DATABASE_NAME = "RATEAPPDATABASE";
-       private static final int DATABASE_VERSION = 2;
+       private static final int DATABASE_VERSION = 3;
 
        private static final String FEATURE_TABLE = "Feature";
        private static final String FID = "FID";
@@ -48,13 +47,9 @@ public class DatabaseAdapter {
        private static final String STARS = "Stars";
        private static final String COMMENT = "Comment";
 
-       private static final String USER = "User";
-       private static final String  UID = "_IID";
-       private static final String NAME = "Name";
-       private static final String AGE = "Age";
-       private static final String GENDER = "Gender";
-
        private Context context;
+
+       private static final String ENABLE_FOREIGN_KEYS = "PRAGMA foreign_keys = 1;";
 
        private static final String CREATE_TABLE0 = "CREATE TABLE " + FEATURE_TABLE + "(" + FID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                + FEATURE_NAME + " VARCHAR(255));";
@@ -65,14 +60,14 @@ public class DatabaseAdapter {
                FEATURE_TABLE + "("+FID+"));";
        private static final String DROP_TABLE1 = "DROP TABLE IF EXISTS " + ISSUE_TABLE;
 
+
+
        private static final String CREATE_TABLE2 = "CREATE TABLE " + APPREVIEW_TABLE + "(" + RID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                STARS + " INTEGER, " + COMMENT + " VARCHAR(255));";
 
        private static final String DROP_TABLE2 = "DROP TABLE IF EXISTS " + APPREVIEW_TABLE;
 
-       private static final String CREATE_TABLE3 = "CREATE TABLE " + USER + "(" + UID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-               NAME + " VARCHAR(255), " + AGE + " INTEGER, " + GENDER + " VARCHAR(7));";
-       private static final String DROP_TABLE3 = "DROP TABLE IF EXISTS " + USER;
+
 
        public DatabaseHelper(Context context){
            super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -85,11 +80,10 @@ public class DatabaseAdapter {
        public void onCreate(SQLiteDatabase sqLiteDatabase) {
 
            try {
+               sqLiteDatabase.execSQL(ENABLE_FOREIGN_KEYS);
                sqLiteDatabase.execSQL(CREATE_TABLE0);
                sqLiteDatabase.execSQL(CREATE_TABLE1);
                sqLiteDatabase.execSQL(CREATE_TABLE2);
-               sqLiteDatabase.execSQL(CREATE_TABLE3);
-
                Message.message(context, "onCreate called");
            } catch (SQLException e) {
                Message.message(context, ""+e);
@@ -100,10 +94,10 @@ public class DatabaseAdapter {
        @Override
        public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
            try {
+               sqLiteDatabase.execSQL(ENABLE_FOREIGN_KEYS);
                sqLiteDatabase.execSQL(DROP_TABLE0);
                sqLiteDatabase.execSQL(DROP_TABLE1);
                sqLiteDatabase.execSQL(DROP_TABLE2);
-               sqLiteDatabase.execSQL(DROP_TABLE3);
                onCreate(sqLiteDatabase);
                Message.message(context, "onUpgrade called");
            } catch (SQLException e) {

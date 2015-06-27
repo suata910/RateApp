@@ -13,6 +13,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.sua.tavita.rateapp.tables.Issue;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,6 +30,9 @@ public class FragmentB extends Fragment {
     private DatabaseAdapter vikaHelper;
     private IssuesDialogFragment fr;
     private List<Integer> mSelectedItems;
+    IssueRepo repo;
+    ArrayList<Issue> is;
+    ArrayList<String> dialogItems;
 
 
     public FragmentB() {
@@ -41,7 +46,19 @@ public class FragmentB extends Fragment {
         vikaHelper = new DatabaseAdapter(getActivity());
         recyclerView = (RecyclerView) layout.findViewById(R.id.featureList);
         adapter = new RecycleViewAdapter(getActivity(), getData());
+        dialogItems = new ArrayList<>();
         fr = new IssuesDialogFragment();
+        repo = new IssueRepo(getActivity());
+        is = repo.getIssuesByID(7);
+        String s;
+
+        for(Issue i: is){
+            s = i.getIssue_description();
+            dialogItems.add(s);
+        }
+
+        final CharSequence[] items = new String[dialogItems.size()];
+        dialogItems.toArray(items);
         mSelectedItems = new ArrayList<>();
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -51,7 +68,7 @@ public class FragmentB extends Fragment {
                 Log.d("Vika", "item " + position + " was clicked");
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setTitle(R.string.dialog_message)
-                        .setMultiChoiceItems(R.array.GPS_issues, null, new DialogInterface.OnMultiChoiceClickListener() {
+                        .setMultiChoiceItems(items, null, new DialogInterface.OnMultiChoiceClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i, boolean isChecked) {
                                 if (isChecked) {

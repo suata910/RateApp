@@ -9,6 +9,8 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
+import java.sql.SQLException;
+
 import tabs.SlidingTabLayout;
 
 
@@ -16,7 +18,8 @@ public class MainActivity extends AppCompatActivity {
     private static final String KEY_POSITION = "position";
     private static final int PAGE_COUNT = 3;
     private static final String TAG = "Vika";
-    private DatabaseAdapter databaseAdapter;
+//    private DatabaseAdapter databaseAdapter;
+    private DBHelper dbHelper;
     private Toolbar toolbar;
     private SlidingTabLayout mTabs;
     private ViewPager mPager;
@@ -26,7 +29,15 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        databaseAdapter = new DatabaseAdapter(this);
+//        databaseAdapter = new DatabaseAdapter(this);
+        dbHelper = new DBHelper(this);
+        dbHelper.createDataBase();
+        try {
+            dbHelper.openDataBase();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        dbHelper.close();
         toolbar = (Toolbar) findViewById(R.id.app_bar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
