@@ -33,7 +33,7 @@ public class DatabaseAdapter {
        private static final String DATABASE_NAME = "RATEAPPDATABASE";
        private static final int DATABASE_VERSION = 3;
 
-       private static final String FEATURE_TABLE = "Feature";
+       private static final String FEATURE_TABLE = "FeatureOne";
        private static final String FID = "FID";
        private static final String FEATURE_NAME = "FeatureName";
 

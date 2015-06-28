@@ -8,7 +8,7 @@ public class Defect {
     public static final String ID = "_id";
     public static final String FID = "fid";
     public static final String IID = "iid";
-    public static final String COUNTER = "counter";
+    public static final String COUNT = "count";
 
 
     public int id;

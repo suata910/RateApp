@@ -8,7 +8,7 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/AppList"
         android:layout_width="match_parent"
-        android:layout_height="95dp">
+        android:layout_height="175dp">
     </android.support.v7.widget.RecyclerView>
 
     <FrameLayout

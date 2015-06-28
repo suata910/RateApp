@@ -17,10 +17,10 @@ import java.util.List;
 public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.MyViewHolder>{
     private static final String TAG = "Vika";
     private LayoutInflater inflater;
-    List<Feature> data = Collections.emptyList();
+    List<Information> data = Collections.emptyList();
     private Context context;
 
-    public RecycleViewAdapter(Context context, List<Feature> data){
+    public RecycleViewAdapter(Context context, List<Information> data){
         this.context = context;
         inflater = LayoutInflater.from(context);
         this.data = data;
@@ -41,10 +41,9 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
 
     @Override
     public void onBindViewHolder(MyViewHolder holder,  int position) {
-        Feature currentFeature = data.get(position);
-//        Log.d(TAG, "onBindViewHolder called " + position);
-        holder.title.setText(currentFeature.featureTitle);
-        holder.icon.setImageResource(currentFeature.iconID);
+        Information current = data.get(position);
+        holder.title.setText(current.title);
+        holder.icon.setImageResource(current.iconID);
     }
 
 

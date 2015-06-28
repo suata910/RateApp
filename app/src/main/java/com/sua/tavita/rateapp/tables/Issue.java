@@ -11,6 +11,16 @@ public class Issue {
     public int id;
     public String issue_description;
 
+    @Override
+    public String toString() {
+        return "Issue{" +
+                "id=" + id +
+                ", issue_description='" + issue_description + '\'' +
+                '}';
+    }
+
+
+
     public int getId() {
         return id;
     }

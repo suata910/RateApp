@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 import android.widget.Toast;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -34,7 +35,6 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public void createDataBase() {
-
         boolean dbExist = checkDataBase();
 
         if (dbExist) {
@@ -93,6 +93,8 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public void openDataBase() throws SQLException {
         String myPath = DB_PATH + DB_NAME;
+        File file = new File(myPath);
+        if (file.exists() && !file.isDirectory())
         myDataBase = SQLiteDatabase.openDatabase(myPath, null,0);
     }
 

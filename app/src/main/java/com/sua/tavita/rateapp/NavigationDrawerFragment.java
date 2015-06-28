@@ -81,8 +81,8 @@ public class NavigationDrawerFragment extends Fragment {
         }));
     }
 
-    public static List<Feature> getData() {
-        List<Feature> data = new ArrayList<>();
+    public static List<Information> getData() {
+        List<Information> data = new ArrayList<>();
 
         int[] icons = {R.drawable.ic_number1, R.drawable.ic_number2,
                 R.drawable.ic_number3, R.drawable.ic_number4};
@@ -90,17 +90,12 @@ public class NavigationDrawerFragment extends Fragment {
         String[] titles = {"Item One", "Item Two", "Item Three", "Item Four"};
 
         for (int i = 0; i < titles.length && i < icons.length; i++) {
-            Feature current = new Feature();
+            Information current = new Information();
+            current.title = titles[i];
             current.iconID = icons[i];
-            current.featureTitle = titles[i];
             data.add(current);
         }
-//        for (int i = 0; i < 100; i++) {
-//            Feature current = new Feature();
-//            current.iconID = icons[i % icons.length];
-//            current.featureTitle = titles[i % titles.length];
-//            data.add(current);
-//        }
+
         return data;
     }
 
@@ -128,7 +123,7 @@ public class NavigationDrawerFragment extends Fragment {
             @Override
             public void onDrawerSlide(View drawerView, float slideOffset) {
                 super.onDrawerSlide(drawerView, slideOffset);
-                Log.d("Vika", "offset " + slideOffset);
+//                Log.d("Vika", "offset " + slideOffset);
             }
         };
         if (!mUserLearnedDrawer && !mFromSavedInstanceState) {

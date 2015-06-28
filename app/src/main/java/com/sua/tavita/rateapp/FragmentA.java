@@ -11,6 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.sua.tavita.rateapp.tables.App;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +23,7 @@ public class FragmentA extends Fragment {
     private RecyclerView recyclerView;
     private RecycleViewAdapter adapter;
     private View rootView;
+    private AppRepo repo;
 
     public FragmentA() {
 
@@ -39,13 +42,11 @@ public class FragmentA extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Log.d("vika", "FragmentA onViewCreated called");
         recyclerView.setLayoutManager(new MyLinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         recyclerView.setAdapter(adapter);
         recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), recyclerView, new RecyclerItemClickListener.OnItemClickListener1() {
             @Override
             public void onItemClick(View view, int position) {
-                Log.d("Vika", "item " + position + " was clicked");
                 if (savedInstanceState == null) {
                     Fragment fragment = new FragmentA2();
                     FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
@@ -61,17 +62,18 @@ public class FragmentA extends Fragment {
 
     }
 
-    public static List<Feature> getData() {
-        List<Feature> data = new ArrayList<>();
+    public List<Information> getData() {
+        repo = new AppRepo(getActivity());
+        List<App> apps = repo.getAppList();
+        List<Information> data = new ArrayList<>();
 
         int[] icons = {R.drawable.ic_facebook, R.drawable.ic_mytracks};
 
-        String[] titles = {"Facebook", "MyTracks"};
-
-        for (int i = 0; i < titles.length && i < icons.length; i++) {
-            Feature current = new Feature();
+        for (int i = 0; i < apps.size() && i < icons.length; i++) {
+            Information current = new Information();
             current.iconID = icons[i];
-            current.featureTitle = titles[i];
+            current.title = apps.get(i).getName();
+            Log.d("vika", current.title);
             data.add(current);
         }
         return data;
