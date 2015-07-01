@@ -44,4 +44,22 @@ public class FeatureRepo {
         db.close();
         return features;
     }
+
+    public Feature getFeatureByID(int id){
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        String selectQuery = "SELECT " + Feature.FEATURE_NAME
+                + " FROM " + Feature.TABLE
+                + " WHERE " + Feature.ID + " = ?";
+        Feature feature = new Feature();
+        int iCount = 0;
+        cursor = db.rawQuery(selectQuery, new String[]{String.valueOf(id)});
+        if(cursor.moveToFirst()){
+            do{
+                feature.setFeature_name(cursor.getString(cursor.getColumnIndex(Feature.FEATURE_NAME)));
+            }while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        return feature;
+    }
 }

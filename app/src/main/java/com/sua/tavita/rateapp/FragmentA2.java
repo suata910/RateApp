@@ -3,7 +3,9 @@ package com.sua.tavita.rateapp;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +15,8 @@ import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarChart;
 
+import tabs.SlidingTabLayout;
+
 /**
  * Created by Teuila on 18/06/15.
  */
@@ -21,6 +25,11 @@ public class FragmentA2 extends Fragment {
     RatingBar stars;
     EditText txt;
     TextView ratingValue;
+    private SlidingTabLayout mTabs;
+    private ViewPager mPager;
+    private AppReviewRepo repoAppReview;
+    private static final int PAGE_COUNT = 2;
+
 
     public FragmentA2() {
 
@@ -29,11 +38,17 @@ public class FragmentA2 extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        Log.d("vika", "FragmentA2 onCreateView called");
         View layout = inflater.inflate(R.layout.fragment_a2, container, false);
+//        mTabs = (SlidingTabLayout) findViewById(R.id.tabs);
+//        mPager = (ViewPager) findViewById(R.id.pager);
+//        mPager.setAdapter(new MyPagerAdapter(getSupportFragmentManager()));
+//        mTabs.setDistributeEvenly(true);
+//        mTabs.setBackgroundColor(getResources().getColor(R.color.primaryColor));
+//        mTabs.setSelectedIndicatorColors(getResources().getColor(R.color.accentColor));
+//        mTabs.setViewPager(mPager);
         chart = (BarChart) layout.findViewById(R.id.chart);
         stars = (RatingBar) layout.findViewById(R.id.ratingBar);
-        txt = (EditText) layout.findViewById(R.id.editText);
+        txt = (EditText) layout.findViewById(R.id.comment);
         ratingValue = (TextView) layout.findViewById(R.id.ratingValue);
         setListeners();
         return layout;
@@ -53,5 +68,33 @@ public class FragmentA2 extends Fragment {
                         + ratedValue + "/" + numStars);
             }
         });
+    }
+
+    class MyPagerAdapter extends FragmentPagerAdapter {
+        String[] tabs = getResources().getStringArray(R.array.tabs);
+
+        public MyPagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        public CharSequence getPageTitle(int position) {
+            return tabs[position];
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            Fragment fragment = null;
+            if (position == 0) {
+                fragment = new FragmentA(); //outer fragment
+            } else {
+                fragment = new FragmentB();
+            }
+            return fragment;
+        }
+
+        @Override
+        public int getCount() {
+            return PAGE_COUNT;
+        }
     }
 }

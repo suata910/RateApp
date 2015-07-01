@@ -22,15 +22,18 @@ public class AppRepo {
 
     public ArrayList<App> getAppList(){
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        String selectQuery = "SELECT " + App.NAME + " FROM " + App.TABLE;
+        String selectQuery = "SELECT *" + " FROM " + App.TABLE;
         ArrayList<App> apps = new ArrayList<>();
         cursor = db.rawQuery(selectQuery, null);
-        if(cursor.moveToFirst()){
-            App app = new App();
-            app.setName(cursor.getString(cursor.getColumnIndex(App.NAME)));
-            Log.d("vika", app.toString());
-            apps.add(app);
-        }while(cursor.moveToNext());
+        if(cursor.moveToFirst()) {
+            do {
+                App app = new App();
+                app.setName(cursor.getString(cursor.getColumnIndex(App.NAME)));
+                Log.d("vika", app.toString());
+                apps.add(app);
+                System.out.println(apps.toString());
+            } while (cursor.moveToNext());
+        }
         cursor.close();
         db.close();
         return apps;

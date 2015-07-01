@@ -15,7 +15,6 @@ import java.util.List;
  * Created by Teuila on 27/05/15.
  */
 public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.MyViewHolder>{
-    private static final String TAG = "Vika";
     private LayoutInflater inflater;
     List<Information> data = Collections.emptyList();
     private Context context;
@@ -40,7 +39,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolder holder,  int position) {
+    public void onBindViewHolder(final MyViewHolder holder, int position) {
         Information current = data.get(position);
         holder.title.setText(current.title);
         holder.icon.setImageResource(current.iconID);

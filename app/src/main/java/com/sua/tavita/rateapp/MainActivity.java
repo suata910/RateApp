@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -16,20 +17,21 @@ import tabs.SlidingTabLayout;
 
 public class MainActivity extends AppCompatActivity {
     private static final String KEY_POSITION = "position";
-    private static final int PAGE_COUNT = 3;
+    private static final int PAGE_COUNT = 2;
     private static final String TAG = "Vika";
-//    private DatabaseAdapter databaseAdapter;
     private DBHelper dbHelper;
     private Toolbar toolbar;
     private SlidingTabLayout mTabs;
     private ViewPager mPager;
+    private AppReviewRepo repoAppReview;
+    Fragment fragment = null;
+
 //    private RippleView rippleView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-//        databaseAdapter = new DatabaseAdapter(this);
         dbHelper = new DBHelper(this);
         dbHelper.createDataBase();
         try {
@@ -41,20 +43,32 @@ public class MainActivity extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.app_bar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle("RateApp");
         NavigationDrawerFragment drawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_fragment);
 
         drawerFragment.setUp(R.id.navigation_fragment, (DrawerLayout) findViewById(R.id.drawer_layout), toolbar);
-        mTabs = (SlidingTabLayout) findViewById(R.id.tabs);
-        mPager = (ViewPager) findViewById(R.id.pager);
-        mPager.setAdapter(new MyPagerAdapter(getSupportFragmentManager()));
-        mTabs.setDistributeEvenly(true);
-        mTabs.setBackgroundColor(getResources().getColor(R.color.primaryColor));
-        mTabs.setSelectedIndicatorColors(getResources().getColor(R.color.accentColor));
-        mTabs.setViewPager(mPager);
+//        mTabs = (SlidingTabLayout) findViewById(R.id.tabs);
+//        mPager = (ViewPager) findViewById(R.id.pager);
+//        mPager.setAdapter(new MyPagerAdapter(getSupportFragmentManager()));
+//        mTabs.setDistributeEvenly(true);
+//        mTabs.setBackgroundColor(getResources().getColor(R.color.primaryColor));
+//        mTabs.setSelectedIndicatorColors(getResources().getColor(R.color.accentColor));
+//        mTabs.setViewPager(mPager);
+        FragmentManager fm = getSupportFragmentManager();
+//        fragment = fm.findFragmentByTag("FragmentA");
+        fragment = new FragmentA();
+        if(fragment == null){
+            FragmentTransaction ft = fm.beginTransaction();
+
+            ft.add(R.id.frag_a, fragment, "FragmentA");
+            ft.commit();
+        }
+
+
+
 
     }
-
 
 
     class MyPagerAdapter extends FragmentPagerAdapter {
@@ -73,10 +87,8 @@ public class MainActivity extends AppCompatActivity {
             Fragment fragment = null;
             if (position == 0) {
                 fragment = new FragmentA(); //outer fragment
-            } else if (position == 1) {
-            fragment = new FragmentB();
             } else {
-                fragment = new FragmentC();
+                fragment = new FragmentB();
             }
             return fragment;
         }
@@ -86,6 +98,4 @@ public class MainActivity extends AppCompatActivity {
             return PAGE_COUNT;
         }
     }
-
-
 }

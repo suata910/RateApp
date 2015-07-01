@@ -33,7 +33,6 @@ public class FragmentA extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_a, container, false);
-        Log.d("vika", "FragmentA OnCreateView called");
         recyclerView = (RecyclerView) rootView.findViewById(R.id.AppList);
         adapter = new RecycleViewAdapter(getActivity(), getData());
         return rootView;
@@ -44,13 +43,14 @@ public class FragmentA extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         recyclerView.setLayoutManager(new MyLinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         recyclerView.setAdapter(adapter);
-        recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), recyclerView, new RecyclerItemClickListener.OnItemClickListener1() {
+        recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
                 if (savedInstanceState == null) {
                     Fragment fragment = new FragmentA2();
-                    FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-                    transaction.replace(R.id.fragmentA2, fragment).commit();
+                    FragmentTransaction ft = getChildFragmentManager().beginTransaction();
+                    ft.setCustomAnimations(R.anim.abc_slide_in_bottom, R.anim.abc_slide_in_bottom);
+                    ft.replace(R.id.fragmentA2, fragment).commit();
                 }
             }
 

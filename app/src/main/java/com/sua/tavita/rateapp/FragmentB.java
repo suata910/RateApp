@@ -21,12 +21,14 @@ import java.util.List;
 public class FragmentB extends Fragment {
     private RecyclerView recyclerView;
     private RecycleViewAdapter adapter;
-    private IssuesDialogFragment fr;
+    //    private IssuesDialogFragment fr;
     private List<Integer> mSelectedItems;
+
     private IssueRepo repoIss;
     private FeatureRepo repoFe;
     private ArrayList<Issue> is;
     private ArrayList<String> dialogItems;
+    private CharSequence[] items = null;
 
 
     public FragmentB() {
@@ -40,27 +42,35 @@ public class FragmentB extends Fragment {
         recyclerView = (RecyclerView) layout.findViewById(R.id.featureList);
         adapter = new RecycleViewAdapter(getActivity(), getFeatureList());
         dialogItems = new ArrayList<>();
-        fr = new IssuesDialogFragment();
+        mSelectedItems = new ArrayList<>();
+        return layout;
+    }
+
+    public void getRelatedIssues(int featureID) {
         repoIss = new IssueRepo(getActivity());
-        is = repoIss.getIssuesByID(7);
+        is = repoIss.getIssuesByID(featureID);
+        items = new String[dialogItems.size()];
         String s;
-        for(Issue i: is){
-            s = i.getIssue_description();
+        for (Issue a : is) {
+            s = a.getIssue_description();
             System.out.println(s);
             dialogItems.add(s);
         }
+    }
 
-        final CharSequence[] items = new String[dialogItems.size()];
-        dialogItems.toArray(items);
-        mSelectedItems = new ArrayList<>();
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), recyclerView, new RecyclerItemClickListener.OnItemClickListener1() {
+        recyclerView.setLayoutManager(new MyLinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
+        recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
+                getRelatedIssues(recyclerView.getChildAdapterPosition(view));
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setTitle(R.string.dialog_message)
-                        .setMultiChoiceItems(items, null, new DialogInterface.OnMultiChoiceClickListener() {
+                        .setMultiChoiceItems(dialogItems.toArray(items), null, new DialogInterface.OnMultiChoiceClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i, boolean isChecked) {
                                 if (isChecked) {
@@ -90,15 +100,20 @@ public class FragmentB extends Fragment {
                 Message.message(getActivity(), "that was a long click");
             }
         }));
-        return layout;
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+            }
+        });
     }
 
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-    }
-
-    public List<Information> getFeatureList(){
+    public List<Information> getFeatureList() {
         repoFe = new FeatureRepo(getActivity());
         List<Feature> features = repoFe.getFeatureList();
         List<Information> data = new ArrayList<>();
@@ -109,7 +124,7 @@ public class FragmentB extends Fragment {
 
         String s;
 
-        for (int i = 0; i < features.size() && i < icons.length; i ++){
+        for (int i = 0; i < features.size() && i < icons.length; i++) {
             Information current = new Information();
             current.iconID = icons[i];
             current.title = features.get(i).feature_name;

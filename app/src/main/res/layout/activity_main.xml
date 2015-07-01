@@ -14,23 +14,30 @@
         <include
             android:id="@+id/app_bar"
             layout="@layout/app_bar">
-
         </include>
 
-        <tabs.SlidingTabLayout
-            android:id="@+id/tabs"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+        <fragment
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:name="com.sua.tavita.rateapp.FragmentA"
+            android:id="@+id/frag_a"
+            tools:layout="@layout/fragment_a" />
 
-        </tabs.SlidingTabLayout>
 
-        <android.support.v4.view.ViewPager
-            android:id="@+id/pager"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            >
-        </android.support.v4.view.ViewPager>
+        <!--<tabs.SlidingTabLayout-->
+            <!--android:id="@+id/tabs"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content">-->
+
+        <!--</tabs.SlidingTabLayout>-->
+
+        <!--<android.support.v4.view.ViewPager-->
+            <!--android:id="@+id/pager"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="0dp"-->
+            <!--android:layout_weight="1.04"-->
+            <!-->-->
+        <!--</android.support.v4.view.ViewPager>-->
 
     </LinearLayout>
 
