@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.sua.tavita.rateapp.tables.Defect;
+import com.sua.tavita.rateapp.tables.Feature;
 import com.sua.tavita.rateapp.tables.Issue;
 
 import java.util.ArrayList;
@@ -22,28 +23,34 @@ public class IssueRepo {
     }
 
     //get the issues related to a specific feature
-    public ArrayList<Issue> getIssuesByID(int id){
+    public ArrayList<Issue> getIssuesByID(String name){
         ArrayList<Issue> issues = new ArrayList<>();
         SQLiteDatabase db = helper.getReadableDatabase();
 
         String selectQuery = "SELECT " + Issue.ISSUE_DESCRIPTION + " FROM " + Issue.TABLE
                 + " a INNER JOIN "
-                + Defect.TABLE + " b ON "+ "a._id = b.did" + " where "+
-                Defect.FID + "=?"; //select the issues related to a particular feature
+                + Defect.TABLE + " b ON "+ "a._id = b.iid "
+                + "INNER JOIN " + Feature.TABLE + " c ON "
+                + "c._id = b.fid "
+                + " where "+
+                Feature.FEATURE_NAME + "=?"; //select the issues related to a particular feature
 
         int iCount =0;
 
-        cursor = db.rawQuery(selectQuery, new String[]{String.valueOf(id)});
+        cursor = db.rawQuery(selectQuery, new String[]{name});
 
         if (cursor.moveToFirst()){
             do {
                 Issue iss = new Issue();
                 iss.setIssue_description(cursor.getString(cursor.getColumnIndex(Issue.ISSUE_DESCRIPTION)));
                 iss.toString();
+
                 issues.add(iss);
+                Log.d("Vika", issues.get(iCount).getIssue_description());
+                iCount++;
             }while (cursor.moveToNext());
         }
-        Log.d("Vika", issues.toString());
+
         cursor.close();
         db.close();
         return issues;

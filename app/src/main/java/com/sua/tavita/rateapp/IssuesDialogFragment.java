@@ -25,7 +25,7 @@ public class IssuesDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         repo = new IssueRepo(getActivity());
-        is = repo.getIssuesByID(7);
+        is = repo.getIssuesByID("GPS");
         a = new Issue();
         String s = "";
         for(Issue i: is){

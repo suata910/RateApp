@@ -9,13 +9,14 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.ViewGroup;
 
 import java.sql.SQLException;
 
 import tabs.SlidingTabLayout;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements CommunicatorInterface {
     private static final String KEY_POSITION = "position";
     private static final int PAGE_COUNT = 2;
     private static final String TAG = "Vika";
@@ -25,6 +26,9 @@ public class MainActivity extends AppCompatActivity {
     private ViewPager mPager;
     private AppReviewRepo repoAppReview;
     Fragment fragment = null;
+    private  FragmentTransaction ft;
+
+
 
 //    private RippleView rippleView;
 
@@ -40,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         dbHelper.close();
+        final ViewGroup viewGroup = (ViewGroup) ((ViewGroup) this.findViewById(android.R.id.content)).getChildAt(0);
         toolbar = (Toolbar) findViewById(R.id.app_bar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -55,19 +60,44 @@ public class MainActivity extends AppCompatActivity {
 //        mTabs.setBackgroundColor(getResources().getColor(R.color.primaryColor));
 //        mTabs.setSelectedIndicatorColors(getResources().getColor(R.color.accentColor));
 //        mTabs.setViewPager(mPager);
-        FragmentManager fm = getSupportFragmentManager();
+
 //        fragment = fm.findFragmentByTag("FragmentA");
         fragment = new FragmentA();
-        if(fragment == null){
-            FragmentTransaction ft = fm.beginTransaction();
-
-            ft.add(R.id.frag_a, fragment, "FragmentA");
-            ft.commit();
-        }
-
+//        replaceFragment(fragment);
+        ft = getSupportFragmentManager().beginTransaction();
+        ft.add(R.id.frag_main, fragment);
+        ft.commit();
+    }
 
 
 
+    @Override
+    public void replaceFragment(Fragment fragment) {
+        ft = getSupportFragmentManager().beginTransaction();
+//        ft.setCustomAnimations(R.anim.abc_slide_in_bottom, R.anim.abc_slide_in_bottom);
+        ft.replace(R.id.frag_main, fragment);
+        ft.addToBackStack(null);
+        ft.commit();
+    }
+
+    @Override
+    public void setActionBarTitle(String title) {
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle(title);
+    }
+
+    @Override
+    public String getActionBarTitle() {
+        return (String) getSupportActionBar().getTitle();
+    }
+
+    @Override
+    public void onBackPressed() {
+        //your method call
+        super.onBackPressed();
+        setActionBarTitle("RateApp");
     }
 
 

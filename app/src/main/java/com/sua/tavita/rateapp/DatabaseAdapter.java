@@ -42,7 +42,7 @@ public class DatabaseAdapter {
        private static final String ISSUE_DESCRIPTION = "IssueDescription";
        private static final String RELATED_FEATURE = "RelatedFeature";
 
-       private static final String APPREVIEW_TABLE = "AppReview";
+       private static final String APPREVIEW_TABLE = "AppReview_a";
        private static final String RID = "_RID";
        private static final String STARS = "Stars";
        private static final String COMMENT = "Comment";

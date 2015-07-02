@@ -20,6 +20,24 @@ public class AppRepo {
         dbHelper = new DBHelper(context);
     }
 
+    public App getAppByName(String name){
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        String selectQuery = "SELECT *" + " FROM " + App.TABLE
+                + " WHERE " + App.NAME + "=?";
+
+        App app = new App();
+        int iCount = 0;
+        cursor = db.rawQuery(selectQuery, new String[]{name});
+        if(cursor.moveToFirst()){
+            do{
+                app.setName(cursor.getString(cursor.getColumnIndex(App.NAME)));
+            }while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        return app;
+    }
+
     public ArrayList<App> getAppList(){
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         String selectQuery = "SELECT *" + " FROM " + App.TABLE;

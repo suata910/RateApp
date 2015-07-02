@@ -18,20 +18,20 @@ public class AppReviewRepo {
         dbHelper = new DBHelper(context);
     }
 
-    public int insert(AppReview appReview) {
+    public long insertAppReview(AppReview appReview) {
 
         //Open connection to write data
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(AppReview.ID, appReview.id);
         values.put(AppReview.STARS, appReview.stars);
-        values.put(AppReview.COMMENT, appReview.comment);
+        values.put(AppReview.TITLE, appReview.title);
+        values.put(AppReview.DESCRIPTION, appReview.description);
         values.put(AppReview.APPLICATION_ID, appReview.aid);
 
         // Inserting Row
         long review_id = db.insert(AppReview.TABLE, null, values);
         db.close(); // Closing database connection
-        return (int) review_id;
+        return review_id;
     }
 
 }

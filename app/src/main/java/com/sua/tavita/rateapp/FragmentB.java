@@ -8,20 +8,25 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
 import com.sua.tavita.rateapp.tables.Feature;
 import com.sua.tavita.rateapp.tables.Issue;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class FragmentB extends Fragment {
     private RecyclerView recyclerView;
     private RecycleViewAdapter adapter;
     //    private IssuesDialogFragment fr;
+    private String s;
     private List<Integer> mSelectedItems;
 
     private IssueRepo repoIss;
@@ -29,6 +34,9 @@ public class FragmentB extends Fragment {
     private ArrayList<Issue> is;
     private ArrayList<String> dialogItems;
     private CharSequence[] items = null;
+    private ArrayList<String> innerList = new ArrayList<>();
+    private ArrayList<ArrayList<String>> outerList = new ArrayList<>();
+    private List<Information> data;
 
 
     public FragmentB() {
@@ -41,21 +49,9 @@ public class FragmentB extends Fragment {
         View layout = inflater.inflate(R.layout.fragment_b, container, false);
         recyclerView = (RecyclerView) layout.findViewById(R.id.featureList);
         adapter = new RecycleViewAdapter(getActivity(), getFeatureList());
-        dialogItems = new ArrayList<>();
+//        dialogItems = new ArrayList<>();
         mSelectedItems = new ArrayList<>();
         return layout;
-    }
-
-    public void getRelatedIssues(int featureID) {
-        repoIss = new IssueRepo(getActivity());
-        is = repoIss.getIssuesByID(featureID);
-        items = new String[dialogItems.size()];
-        String s;
-        for (Issue a : is) {
-            s = a.getIssue_description();
-            System.out.println(s);
-            dialogItems.add(s);
-        }
     }
 
 
@@ -65,16 +61,22 @@ public class FragmentB extends Fragment {
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new MyLinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
         recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
+
             @Override
             public void onItemClick(View view, int position) {
-                getRelatedIssues(recyclerView.getChildAdapterPosition(view));
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setTitle(R.string.dialog_message)
-                        .setMultiChoiceItems(dialogItems.toArray(items), null, new DialogInterface.OnMultiChoiceClickListener() {
+                s = getFeatureList().get(position).getTitle();
+                getRelatedIssues(s);
+
+                Log.d("vika", "the related issues are " + Arrays.toString(items));
+                builder.setTitle(data.get(recyclerView.getChildAdapterPosition(view)).getTitle())
+                        .setMultiChoiceItems(items, null, new DialogInterface.OnMultiChoiceClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i, boolean isChecked) {
                                 if (isChecked) {
+
                                     mSelectedItems.add(i);
+//                                    innerList.add((String)items[i]);
                                 } else if (mSelectedItems.contains(i)) {
                                     mSelectedItems.remove(Integer.valueOf(i));
                                 }
@@ -85,6 +87,27 @@ public class FragmentB extends Fragment {
                             public void onClick(DialogInterface dialog, int id) {
                                 // User clicked OK, so save the mSelectedItems results somewhere
                                 // or return them to the component that opened the dialog
+                                ListView lw = ((AlertDialog) dialog).getListView();
+                                SparseBooleanArray checkedItems = lw.getCheckedItemPositions();
+                                if (checkedItems != null) {
+                                    for (int i = 0; i < checkedItems.size(); i++) {
+                                        if (checkedItems.valueAt(i)) {
+                                            String item = lw.getAdapter().getItem(
+                                                    checkedItems.keyAt(i)).toString();
+//                                            Log.i("vika",item + " was selected");
+                                            innerList.add(item);
+//                                            Toast.makeText(getActivity(), item, Toast.LENGTH_SHORT).show();
+//                                            Message.message(getActivity(), item);
+                                        }
+                                    }
+                                }
+                                outerList.add(innerList);
+                                for (ArrayList<String> list_a : outerList) {
+                                    for (String s : list_a)
+                                        Log.d("vika", "selected issues " + s + "\n");
+                                }
+
+
                                 dialog.dismiss();
                             }
                         }).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -92,7 +115,7 @@ public class FragmentB extends Fragment {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.dismiss();
                     }
-                }).create().show();
+                }).setCancelable(false).create().show();
             }
 
             @Override
@@ -113,10 +136,24 @@ public class FragmentB extends Fragment {
         });
     }
 
+    public void getRelatedIssues(String name) {
+        dialogItems = new ArrayList<>();
+        repoIss = new IssueRepo(getActivity());
+        is = repoIss.getIssuesByID(name);
+        String w = null;
+
+        for (Issue a : is) {
+            w = a.getIssue_description();
+            System.out.println(w);
+            dialogItems.add(w);
+        }
+        items = dialogItems.toArray(new String[dialogItems.size()]);
+    }
+
     public List<Information> getFeatureList() {
         repoFe = new FeatureRepo(getActivity());
         List<Feature> features = repoFe.getFeatureList();
-        List<Information> data = new ArrayList<>();
+        data = new ArrayList<>();
 
         int[] icons = {R.drawable.ic_gps, R.drawable.ic_time,
                 R.drawable.ic_maps, R.drawable.ic_signal, R.drawable.ic_data, R.drawable.ic_distance,
@@ -126,8 +163,9 @@ public class FragmentB extends Fragment {
 
         for (int i = 0; i < features.size() && i < icons.length; i++) {
             Information current = new Information();
-            current.iconID = icons[i];
-            current.title = features.get(i).feature_name;
+            current.setIconID(icons[i]);
+            current.setTitle(features.get(i).getFeature_name());
+//            Log.d("vika", "the title of the current issue is " + current.getTitle());
             data.add(current);
         }
         return data;

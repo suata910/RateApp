@@ -7,28 +7,29 @@ public class AppReview {
     public static final String TABLE = "appreview";
     public static final String ID = "_id";
     public static final String STARS = "stars";
-    public static final String COMMENT = "comment";
+    public static final String TITLE = "title";
+    public static final String DESCRIPTION = "description";
     public static final String APPLICATION_ID = "aid";
 
-    public int id;
     public int aid;
     public int stars;
-    public String comment;
+    public String title;
+    public String description;
 
-    public int getAid() {
-        return aid;
+    public String getDescription() {
+        return description;
     }
 
-    public void setAid(int aid) {
-        this.aid = aid;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public String getComment() {
-        return comment;
+    public String getTitle() {
+        return title;
     }
 
-    public void setComment(String comment) {
-        this.comment = comment;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public int getStars() {
@@ -39,11 +40,11 @@ public class AppReview {
         this.stars = stars;
     }
 
-    public int getId() {
-        return id;
+    public int getAid() {
+        return aid;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setAid(int aid) {
+        this.aid = aid;
     }
 }

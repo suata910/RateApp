@@ -1,19 +1,24 @@
 package com.sua.tavita.rateapp;
 
+import android.app.Activity;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
-import com.github.mikephil.charting.charts.BarChart;
+import com.sua.tavita.rateapp.tables.*;
+import com.sua.tavita.rateapp.tables.AppReview;
 
 import tabs.SlidingTabLayout;
 
@@ -21,15 +26,33 @@ import tabs.SlidingTabLayout;
  * Created by Teuila on 18/06/15.
  */
 public class FragmentA2 extends Fragment {
-    BarChart chart;
-    RatingBar stars;
-    EditText txt;
+    RatingBar rating;
+    EditText titleTxt;
+    EditText descTxt;
     TextView ratingValue;
+    Button submitBtn;
     private SlidingTabLayout mTabs;
     private ViewPager mPager;
-    private AppReviewRepo repoAppReview;
     private static final int PAGE_COUNT = 2;
+    private int stars;
+    private UserRepo userRepo;
+    private AppRepo appRepo;
+    private AppReviewRepo reviewRepo;
+    private String android_id;
+    private String ts;
+    private int counter;
+    private CommunicatorInterface comm;
 
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            comm = (CommunicatorInterface) activity;
+        } catch (ClassCastException castException) {
+            /** The activity does not implement the listener. */
+            Log.d("vika", " " + castException);
+        }
+    }
 
     public FragmentA2() {
 
@@ -38,7 +61,7 @@ public class FragmentA2 extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View layout = inflater.inflate(R.layout.fragment_a2, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_a2, container, false);
 //        mTabs = (SlidingTabLayout) findViewById(R.id.tabs);
 //        mPager = (ViewPager) findViewById(R.id.pager);
 //        mPager.setAdapter(new MyPagerAdapter(getSupportFragmentManager()));
@@ -46,28 +69,81 @@ public class FragmentA2 extends Fragment {
 //        mTabs.setBackgroundColor(getResources().getColor(R.color.primaryColor));
 //        mTabs.setSelectedIndicatorColors(getResources().getColor(R.color.accentColor));
 //        mTabs.setViewPager(mPager);
-        chart = (BarChart) layout.findViewById(R.id.chart);
-        stars = (RatingBar) layout.findViewById(R.id.ratingBar);
-        txt = (EditText) layout.findViewById(R.id.comment);
-        ratingValue = (TextView) layout.findViewById(R.id.ratingValue);
+        android_id = Settings.Secure.getString(getActivity().getContentResolver(),
+                Settings.Secure.ANDROID_ID);
+        rating = (RatingBar) rootView.findViewById(R.id.ratingBar);
+        titleTxt = (EditText) rootView.findViewById(R.id.title);
+        descTxt = (EditText)rootView.findViewById(R.id.description);
+        ratingValue = (TextView) rootView.findViewById(R.id.ratingValue);
+        submitBtn = (Button) rootView.findViewById(R.id.submitBtn);
+        counter = 0;
         setListeners();
-        return layout;
+
+        return rootView;
     }
 
     public void setListeners() {
-        stars.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+        Long tsLong = System.currentTimeMillis()/1000;
+        ts = tsLong.toString();
+
+        rating.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             @Override
             public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
-                String ratedValue = String.valueOf(rating);
 
-                // Get Number of stars
-                int numStars = ratingBar.getNumStars();
-
-                // Now set the rated Value and numstars on textView
-                ratingValue.setText("Rating value is : "
-                        + ratedValue + "/" + numStars);
+                if (rating == 5) {
+                    ratingValue.setText("Loved It");
+                } else if (rating == 4) {
+                    ratingValue.setText("Liked It");
+                } else if (rating == 3) {
+                    ratingValue.setText("It's Ok");
+                } else if (rating == 2) {
+                    ratingValue.setText("Didn't Like It");
+                } else if (rating == 1) {
+                    ratingValue.setText("Hated It");
+                } else {
+                    ratingValue.setText("");
+                }
+                stars = (int) rating;
             }
         });
+        submitBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+               createUser();
+                createAppReview();
+            }
+
+        });
+    }
+
+    public void createAppReview(){
+
+        reviewRepo = new AppReviewRepo(getActivity());
+        appRepo = new AppRepo(getActivity());
+        AppReview appReview = new AppReview();
+        appReview.setStars(stars);
+        appReview.setTitle(titleTxt.getText().toString());
+        appReview.setDescription(descTxt.getText().toString());
+        appReview.setAid(appRepo.getAppByName(comm.getActionBarTitle()).getId());
+        long id = reviewRepo.insertAppReview(appReview);
+        if(id > 0) {
+            Message.message(getActivity(), "Successfully added a new AppReview");
+        }else{
+            Message.message(getActivity(), "Unsuccessful in adding a new AppReview");
+        }
+    }
+
+    public void createUser(){
+        userRepo = new UserRepo(getActivity());
+        User user = new User();
+        user.device_id = android_id;
+        user.timeStamp = ts;
+        long id = userRepo.insertUser(user);
+        if(id > 0) {
+            Message.message(getActivity(), "Successfully added a new User");
+        }else{
+            Message.message(getActivity(), "Unsuccessful in adding a new user");
+        }
     }
 
     class MyPagerAdapter extends FragmentPagerAdapter {

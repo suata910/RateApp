@@ -23,11 +23,11 @@ public class FeatureRepo {
     //get all the available features
     public ArrayList<Feature> getFeatureList(){
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        String query = "SELECT " + Feature.FEATURE_NAME + ", " + Defect.COUNT
+        String query = "SELECT " + Feature.FEATURE_NAME + ", " + Defect.COUNTER
                 + " FROM " + Feature.TABLE + " a INNER JOIN "
                 + Defect.TABLE + " b ON "
                 + "a._id = b.did "
-                + "ORDER BY " + Defect.COUNT + " DESC;";
+                + "ORDER BY " + Defect.COUNTER + " DESC;";
 
         ArrayList<Feature> features = new ArrayList<>();
         cursor = db.rawQuery(query, null);

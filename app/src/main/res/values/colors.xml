@@ -6,6 +6,6 @@
     <color name="colorHighlight">#D5C5C8</color>
     <color name="accentColor">#FFB4A2</color>
     <color name="primaryText">#212121</color>
-    <color name="secondaryText">#727272</color>
+    <color name="secondaryText">#ff00ff00</color>
     <color name="dividerColor">#B6B6B6</color>
 </resources>

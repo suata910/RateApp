@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:weightSum="1">
 
     <!--<tabs.SlidingTabLayout-->
     <!--android:id="@+id/tabs"-->
@@ -23,39 +24,65 @@
         android:layout_gravity="center_horizontal"
         android:id="@+id/ratingBar"
         android:rating="0.0"
-        android:stepSize=".5" />
+        android:stepSize="1.0"
+        android:clickable="false" />
 
     <TextView
-        android:layout_width="fill_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/ratingValue"
         android:layout_gravity="center_horizontal"
-        android:background="@color/primaryColor"
-        android:textSize="20sp"
+        android:textColor="@color/secondaryText"
+        android:textSize="15sp"
         android:textAlignment="center" />
-
-    <fragment
-        android:layout_width="wrap_content"
-        android:layout_height="60dp"
-        android:name="com.sua.tavita.rateapp.FragmentB"
-        android:id="@+id/fragment"
-        tools:layout="@layout/fragment_b" />
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/comment"
+        android:id="@+id/title"
         android:inputType="text"
         android:textAlignment="center"
         android:layout_gravity="center"
-        android:background="#F92A82"
-        android:textSize="25sp" />
+        android:hint="@string/review_title"
+        android:textColorHint="@color/dividerColor"
+        android:textColor="@color/primaryText"
+        android:textSize="15sp" />
+    <EditText
 
-    <com.github.mikephil.charting.charts.BarChart
-        android:id="@+id/chart"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    </com.github.mikephil.charting.charts.BarChart>
+        android:layout_height="wrap_content"
+        android:id="@+id/description"
+        android:inputType="text"
+        android:textAlignment="center"
+        android:layout_gravity="center"
+        android:hint="@string/review_description"
+        android:textColorHint="@color/dividerColor"
+        android:textColor="@color/primaryText"
+        android:textSize="15sp" />
+
+
+
+    <fragment
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:name="com.sua.tavita.rateapp.FragmentB"
+        android:id="@+id/fragment_b"
+        android:layout_gravity="center_horizontal"
+        tools:layout="@layout/fragment_b" />
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/submit_btn"
+        android:id="@+id/submitBtn"
+        android:background="?android:attr/selectableItemBackground"
+        android:textColor="@color/secondaryText"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
+</RelativeLayout>
 
 
 
