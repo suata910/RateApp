@@ -1,11 +1,12 @@
 package com.sua.tavita.rateapp;
 
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -56,7 +57,7 @@ public class FragmentB extends Fragment {
 
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(View view, @Nullable final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new MyLinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
@@ -64,58 +65,10 @@ public class FragmentB extends Fragment {
 
             @Override
             public void onItemClick(View view, int position) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 s = getFeatureList().get(position).getTitle();
                 getRelatedIssues(s);
-
-                Log.d("vika", "the related issues are " + Arrays.toString(items));
-                builder.setTitle(data.get(recyclerView.getChildAdapterPosition(view)).getTitle())
-                        .setMultiChoiceItems(items, null, new DialogInterface.OnMultiChoiceClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i, boolean isChecked) {
-                                if (isChecked) {
-
-                                    mSelectedItems.add(i);
-//                                    innerList.add((String)items[i]);
-                                } else if (mSelectedItems.contains(i)) {
-                                    mSelectedItems.remove(Integer.valueOf(i));
-                                }
-                            }
-                        })
-                        .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int id) {
-                                // User clicked OK, so save the mSelectedItems results somewhere
-                                // or return them to the component that opened the dialog
-                                ListView lw = ((AlertDialog) dialog).getListView();
-                                SparseBooleanArray checkedItems = lw.getCheckedItemPositions();
-                                if (checkedItems != null) {
-                                    for (int i = 0; i < checkedItems.size(); i++) {
-                                        if (checkedItems.valueAt(i)) {
-                                            String item = lw.getAdapter().getItem(
-                                                    checkedItems.keyAt(i)).toString();
-//                                            Log.i("vika",item + " was selected");
-                                            innerList.add(item);
-//                                            Toast.makeText(getActivity(), item, Toast.LENGTH_SHORT).show();
-//                                            Message.message(getActivity(), item);
-                                        }
-                                    }
-                                }
-                                outerList.add(innerList);
-                                for (ArrayList<String> list_a : outerList) {
-                                    for (String s : list_a)
-                                        Log.d("vika", "selected issues " + s + "\n");
-                                }
-
-
-                                dialog.dismiss();
-                            }
-                        }).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.dismiss();
-                    }
-                }).setCancelable(false).create().show();
+                String issueList = data.get(recyclerView.getChildAdapterPosition(view)).getTitle();
+                createDialog(issueList, items).show();
             }
 
             @Override
@@ -169,6 +122,58 @@ public class FragmentB extends Fragment {
             data.add(current);
         }
         return data;
+    }
+
+    public Dialog createDialog(String title, CharSequence[] items){
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+        Log.d("vika", "the related issues are " + Arrays.toString(items));
+        builder.setTitle(title)
+                .setMultiChoiceItems(items, null, new DialogInterface.OnMultiChoiceClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i, boolean isChecked) {
+                        if (isChecked) {
+
+                            mSelectedItems.add(i);
+//                                    innerList.add((String)items[i]);
+                        } else if (mSelectedItems.contains(i)) {
+                            mSelectedItems.remove(Integer.valueOf(i));
+                        }
+                    }
+                })
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        // User clicked OK, so save the mSelectedItems results somewhere
+                        // or return them to the component that opened the dialog
+                        ListView lw = ((AlertDialog) dialog).getListView();
+                        SparseBooleanArray checkedItems = lw.getCheckedItemPositions();
+                        if (checkedItems != null) {
+                            for (int i = 0; i < checkedItems.size(); i++) {
+                                if (checkedItems.valueAt(i)) {
+                                    String item = lw.getAdapter().getItem(
+                                            checkedItems.keyAt(i)).toString();
+//                                            Log.i("vika",item + " was selected");
+                                    innerList.add(item);
+//                                            Toast.makeText(getActivity(), item, Toast.LENGTH_SHORT).show();
+//                                            Message.message(getActivity(), item);
+                                }
+                            }
+                        }
+                        outerList.add(innerList);
+                        for (ArrayList<String> list_a : outerList) {
+                            for (String s : list_a)
+                                Log.d("vika", "selected issues " + s + "\n");
+                        }
+                        dialog.dismiss();
+                    }
+                }).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.dismiss();
+            }
+        }).setCancelable(false);
+        return builder.create();
     }
 
 }

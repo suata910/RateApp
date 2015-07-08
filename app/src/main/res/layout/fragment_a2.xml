@@ -61,13 +61,21 @@
         android:textSize="15sp" />
 
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/report_defect_txt"
+        android:layout_gravity="center"
+        android:background="?android:attr/selectableItemBackground"
+        android:textColor="@color/primaryColor"
+        android:id="@+id/reportIssue" />
 
-    <fragment
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:name="com.sua.tavita.rateapp.FragmentB"
         android:id="@+id/fragment_b"
-        android:layout_gravity="center_horizontal"
+        android:layout_gravity="center_vertical"
         tools:layout="@layout/fragment_b" />
 <RelativeLayout
     android:layout_width="match_parent"

@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,8 +18,8 @@ import android.widget.EditText;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
-import com.sua.tavita.rateapp.tables.*;
 import com.sua.tavita.rateapp.tables.AppReview;
+import com.sua.tavita.rateapp.tables.User;
 
 import tabs.SlidingTabLayout;
 
@@ -31,6 +32,9 @@ public class FragmentA2 extends Fragment {
     EditText descTxt;
     TextView ratingValue;
     Button submitBtn;
+    Button reportIssue;
+    Fragment fragment = null;
+
     private SlidingTabLayout mTabs;
     private ViewPager mPager;
     private static final int PAGE_COUNT = 2;
@@ -41,7 +45,10 @@ public class FragmentA2 extends Fragment {
     private String android_id;
     private String ts;
     private int counter;
+    private User user;
     private CommunicatorInterface comm;
+    private FragmentTransaction ft;
+
 
     @Override
     public void onAttach(Activity activity) {
@@ -73,17 +80,19 @@ public class FragmentA2 extends Fragment {
                 Settings.Secure.ANDROID_ID);
         rating = (RatingBar) rootView.findViewById(R.id.ratingBar);
         titleTxt = (EditText) rootView.findViewById(R.id.title);
-        descTxt = (EditText)rootView.findViewById(R.id.description);
+        descTxt = (EditText) rootView.findViewById(R.id.description);
         ratingValue = (TextView) rootView.findViewById(R.id.ratingValue);
         submitBtn = (Button) rootView.findViewById(R.id.submitBtn);
+        reportIssue = (Button)rootView.findViewById(R.id.reportIssue);
         counter = 0;
         setListeners();
+        comm.setActionBar("Review");
 
         return rootView;
     }
 
     public void setListeners() {
-        Long tsLong = System.currentTimeMillis()/1000;
+        Long tsLong = System.currentTimeMillis() / 1000;
         ts = tsLong.toString();
 
         rating.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
@@ -109,41 +118,58 @@ public class FragmentA2 extends Fragment {
         submitBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               createUser();
-                createAppReview();
+                createUser();
             }
 
         });
+        reportIssue.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                fragment = new FragmentB();
+                replaceFragment(fragment);
+            }
+        });
+//        comm.backPressed();
     }
 
-    public void createAppReview(){
+    public void replaceFragment(Fragment fragment) {
+        ft = getFragmentManager().beginTransaction();
+        ft.setCustomAnimations(R.anim.abc_slide_in_bottom, R.anim.abc_slide_in_bottom);
+        ft.replace(R.id.fragment_b, fragment);
+        ft.addToBackStack(null);
+        ft.commit();
+    }
 
+    public void createAppReview(User user) {
         reviewRepo = new AppReviewRepo(getActivity());
         appRepo = new AppRepo(getActivity());
         AppReview appReview = new AppReview();
         appReview.setStars(stars);
         appReview.setTitle(titleTxt.getText().toString());
         appReview.setDescription(descTxt.getText().toString());
-        appReview.setAid(appRepo.getAppByName(comm.getActionBarTitle()).getId());
+        appReview.setAid(appRepo.getAppByName(comm.getSelectedApp()).getId());
+        appReview.setDeviceId(user.getDevice_id());
+        appReview.setTimeStamp(user.getTimeStamp());
         long id = reviewRepo.insertAppReview(appReview);
-        if(id > 0) {
+        if (id > 0) {
             Message.message(getActivity(), "Successfully added a new AppReview");
-        }else{
+        } else {
             Message.message(getActivity(), "Unsuccessful in adding a new AppReview");
         }
     }
 
-    public void createUser(){
+    public void createUser() {
         userRepo = new UserRepo(getActivity());
-        User user = new User();
+        user = new User();
         user.device_id = android_id;
         user.timeStamp = ts;
         long id = userRepo.insertUser(user);
-        if(id > 0) {
+        if (id > 0) {
             Message.message(getActivity(), "Successfully added a new User");
-        }else{
+        } else {
             Message.message(getActivity(), "Unsuccessful in adding a new user");
         }
+        createAppReview(user);
     }
 
     class MyPagerAdapter extends FragmentPagerAdapter {

@@ -27,6 +27,8 @@ public class AppReviewRepo {
         values.put(AppReview.TITLE, appReview.title);
         values.put(AppReview.DESCRIPTION, appReview.description);
         values.put(AppReview.APPLICATION_ID, appReview.aid);
+        values.put(AppReview.DEVICE_ID, appReview.deviceId);
+        values.put(AppReview.TIMESTAMP, appReview.timeStamp);
 
         // Inserting Row
         long review_id = db.insert(AppReview.TABLE, null, values);

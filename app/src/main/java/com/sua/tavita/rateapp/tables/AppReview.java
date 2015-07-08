@@ -10,11 +10,33 @@ public class AppReview {
     public static final String TITLE = "title";
     public static final String DESCRIPTION = "description";
     public static final String APPLICATION_ID = "aid";
+    public static final String DEVICE_ID = "dev_id";
+    public static final String TIMESTAMP = "t_stamp";
+
+
 
     public int aid;
     public int stars;
     public String title;
     public String description;
+    public String deviceId;
+    public String timeStamp;
+
+    public String getDeviceId() {
+        return deviceId;
+    }
+
+    public void setDeviceId(String deviceId) {
+        this.deviceId = deviceId;
+    }
+
+    public String getTimeStamp() {
+        return timeStamp;
+    }
+
+    public void setTimeStamp(String timeStamp) {
+        this.timeStamp = timeStamp;
+    }
 
     public String getDescription() {
         return description;

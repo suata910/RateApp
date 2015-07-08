@@ -50,7 +50,7 @@ public class FragmentA extends Fragment {
         recyclerView = (RecyclerView) rootView.findViewById(R.id.AppList);
         chart = (BarChart) rootView.findViewById(R.id.chart);
         adapter = new RecycleViewAdapter(getActivity(), getData());
-
+//        listener.getDefaultActionBar();
         return rootView;
 
     }
@@ -74,7 +74,9 @@ public class FragmentA extends Fragment {
 //                    startActivity(i);
                     Fragment a = new FragmentA2();
                     listener.replaceFragment(a);
-                    listener.setActionBarTitle(getData().get(position).title);
+//                    listener.setActionBar("Review");
+                    String s = getData().get(position).title;
+                    listener.setSelectedApp(s);
                 }
             }
 

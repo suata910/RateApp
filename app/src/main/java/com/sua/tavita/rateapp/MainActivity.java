@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity implements CommunicatorInter
     private AppReviewRepo repoAppReview;
     Fragment fragment = null;
     private  FragmentTransaction ft;
+    private String appName = null;
 
 
 
@@ -45,13 +46,10 @@ public class MainActivity extends AppCompatActivity implements CommunicatorInter
         }
         dbHelper.close();
         final ViewGroup viewGroup = (ViewGroup) ((ViewGroup) this.findViewById(android.R.id.content)).getChildAt(0);
-        toolbar = (Toolbar) findViewById(R.id.app_bar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("RateApp");
+
         NavigationDrawerFragment drawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_fragment);
-
+        getDefaultActionBar();
         drawerFragment.setUp(R.id.navigation_fragment, (DrawerLayout) findViewById(R.id.drawer_layout), toolbar);
 //        mTabs = (SlidingTabLayout) findViewById(R.id.tabs);
 //        mPager = (ViewPager) findViewById(R.id.pager);
@@ -60,13 +58,14 @@ public class MainActivity extends AppCompatActivity implements CommunicatorInter
 //        mTabs.setBackgroundColor(getResources().getColor(R.color.primaryColor));
 //        mTabs.setSelectedIndicatorColors(getResources().getColor(R.color.accentColor));
 //        mTabs.setViewPager(mPager);
-
-//        fragment = fm.findFragmentByTag("FragmentA");
         fragment = new FragmentA();
+//        fragment = fm.findFragmentByTag("FragmentA");
+        if(savedInstanceState == null) {
 //        replaceFragment(fragment);
-        ft = getSupportFragmentManager().beginTransaction();
-        ft.add(R.id.frag_main, fragment);
-        ft.commit();
+            ft = getSupportFragmentManager().beginTransaction();
+            ft.add(R.id.frag_main, fragment);
+            ft.commit();
+        }
     }
 
 
@@ -81,24 +80,51 @@ public class MainActivity extends AppCompatActivity implements CommunicatorInter
     }
 
     @Override
-    public void setActionBarTitle(String title) {
-        setSupportActionBar(toolbar);
+    public void setActionBar(String title) {
+//        setSupportActionBar(toolbar);
+//        getSupportActionBar().setDisplayShowHomeEnabled(true);
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle(title);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle(title);
+//        toolbar.setNavigationIcon(R.mipmap.ic_action_back);
+//        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                onBackPressed();
+//            }
+//        });
     }
 
     @Override
-    public String getActionBarTitle() {
-        return (String) getSupportActionBar().getTitle();
+    public void setSelectedApp(String s) {
+        appName = s;
+    }
+
+    @Override
+    public String getSelectedApp() {
+        return appName;
+    }
+
+    @Override
+    public void getDefaultActionBar() {
+        toolbar = (Toolbar) findViewById(R.id.app_bar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle("RateApp");
     }
 
     @Override
     public void onBackPressed() {
-        //your method call
         super.onBackPressed();
-        setActionBarTitle("RateApp");
+
+        toolbar = (Toolbar) findViewById(R.id.app_bar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setTitle("RateApp");
     }
+
 
 
     class MyPagerAdapter extends FragmentPagerAdapter {

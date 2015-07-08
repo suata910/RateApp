@@ -7,6 +7,8 @@ import android.support.v4.app.Fragment;
  */
 public interface CommunicatorInterface {
     public void replaceFragment(Fragment fragment);
-    public void setActionBarTitle(String title);
-    public String getActionBarTitle();
+    public void setActionBar(String title);
+    public void setSelectedApp(String s);
+    public String getSelectedApp();
+    public void getDefaultActionBar();
 }
