@@ -44,8 +44,7 @@ public class DBHelper extends SQLiteOpenHelper {
             try {
                 CopyDataBase();
             } catch (IOException e) {
-                Toast.makeText(myContext, e.getMessage(), Toast.LENGTH_SHORT)
-                        .show();
+                Toast.makeText(myContext, e.getMessage(), Toast.LENGTH_SHORT).show();
                 Log.d("Create DB", e.getMessage());
             }
         }
@@ -58,8 +57,7 @@ public class DBHelper extends SQLiteOpenHelper {
             checkDB = SQLiteDatabase.openDatabase(myPath, null,
                     SQLiteDatabase.NO_LOCALIZED_COLLATORS);
         } catch (SQLiteException e) {
-            Toast.makeText(myContext, e.getMessage(), Toast.LENGTH_SHORT)
-                    .show();
+//            Toast.makeText(myContext, e.getMessage(), Toast.LENGTH_SHORT).show();
             Log.d("Check DB", e.getMessage());
         }
 

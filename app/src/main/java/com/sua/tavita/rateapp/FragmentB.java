@@ -1,6 +1,7 @@
 package com.sua.tavita.rateapp;
 
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -21,6 +22,7 @@ import com.sua.tavita.rateapp.tables.Issue;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 public class FragmentB extends Fragment {
@@ -35,9 +37,23 @@ public class FragmentB extends Fragment {
     private ArrayList<Issue> is;
     private ArrayList<String> dialogItems;
     private CharSequence[] items = null;
-    private ArrayList<String> innerList = new ArrayList<>();
+    private ArrayList<String> issueList = new ArrayList<>();
+    private ArrayList<String> featureList = new ArrayList<>();
     private ArrayList<ArrayList<String>> outerList = new ArrayList<>();
+    HashMap<String, Integer> defects = new HashMap<String, Integer>();
     private List<Information> data;
+    private CommunicatorInterface comm;
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            comm = (CommunicatorInterface) activity;
+        } catch (ClassCastException castException) {
+            /** The activity does not implement the listener. */
+            Log.d("vika", " " + castException);
+        }
+    }
 
 
     public FragmentB() {
@@ -60,15 +76,18 @@ public class FragmentB extends Fragment {
     public void onViewCreated(View view, @Nullable final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new MyLinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
+        recyclerView.setLayoutManager(new MyLinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
 
             @Override
             public void onItemClick(View view, int position) {
                 s = getFeatureList().get(position).getTitle();
                 getRelatedIssues(s);
-                String issueList = data.get(recyclerView.getChildAdapterPosition(view)).getTitle();
-                createDialog(issueList, items).show();
+                String x = data.get(recyclerView.getChildAdapterPosition(view)).getTitle();
+                createDialog(x, items).show();
+                comm.setFeatures(featureList);
+                comm.setIssues(issueList);
+
             }
 
             @Override
@@ -124,7 +143,7 @@ public class FragmentB extends Fragment {
         return data;
     }
 
-    public Dialog createDialog(String title, CharSequence[] items){
+    public Dialog createDialog(final String title, CharSequence[] items) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
         Log.d("vika", "the related issues are " + Arrays.toString(items));
@@ -135,7 +154,7 @@ public class FragmentB extends Fragment {
                         if (isChecked) {
 
                             mSelectedItems.add(i);
-//                                    innerList.add((String)items[i]);
+//                                    issueList.add((String)items[i]);
                         } else if (mSelectedItems.contains(i)) {
                             mSelectedItems.remove(Integer.valueOf(i));
                         }
@@ -146,24 +165,28 @@ public class FragmentB extends Fragment {
                     public void onClick(DialogInterface dialog, int id) {
                         // User clicked OK, so save the mSelectedItems results somewhere
                         // or return them to the component that opened the dialog
+
                         ListView lw = ((AlertDialog) dialog).getListView();
                         SparseBooleanArray checkedItems = lw.getCheckedItemPositions();
                         if (checkedItems != null) {
+                            if(!featureList.contains(title)) {
+                                featureList.add(title);
+                            }
                             for (int i = 0; i < checkedItems.size(); i++) {
                                 if (checkedItems.valueAt(i)) {
-                                    String item = lw.getAdapter().getItem(
-                                            checkedItems.keyAt(i)).toString();
-//                                            Log.i("vika",item + " was selected");
-                                    innerList.add(item);
-//                                            Toast.makeText(getActivity(), item, Toast.LENGTH_SHORT).show();
-//                                            Message.message(getActivity(), item);
+                                    String issueItem = lw.getAdapter().getItem(checkedItems.keyAt(i)).toString();
+                                    issueList.add(issueItem);
                                 }
                             }
                         }
-                        outerList.add(innerList);
+                        outerList.add(issueList);
+                        int i = 0;
                         for (ArrayList<String> list_a : outerList) {
-                            for (String s : list_a)
-                                Log.d("vika", "selected issues " + s + "\n");
+                            Log.d("vika", "list number " + i);
+                            for (String s : list_a) {
+                                Log.d("vika", "selected issue " + s + "\n");
+                            }
+                            i++;
                         }
                         dialog.dismiss();
                     }

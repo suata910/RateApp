@@ -86,7 +86,7 @@ public class DatabaseAdapter {
                sqLiteDatabase.execSQL(CREATE_TABLE2);
                Message.message(context, "onCreate called");
            } catch (SQLException e) {
-               Message.message(context, ""+e);
+//               Message.message(context, ""+e);
                Log.d("Vika", "" + e);
            }
        }
@@ -99,9 +99,9 @@ public class DatabaseAdapter {
                sqLiteDatabase.execSQL(DROP_TABLE1);
                sqLiteDatabase.execSQL(DROP_TABLE2);
                onCreate(sqLiteDatabase);
-               Message.message(context, "onUpgrade called");
+//               Message.message(context, "onUpgrade called");
            } catch (SQLException e) {
-               Message.message(context, ""+e);
+//               Message.message(context, ""+e);
                Log.d("Vika", "" + e);
            }
        }

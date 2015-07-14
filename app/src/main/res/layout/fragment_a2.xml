@@ -18,80 +18,83 @@
     <!--android:layout_weight="1.04"/>-->
 
     <RatingBar
+        android:id="@+id/ratingBar"
         style="?android:attr/ratingBarStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:id="@+id/ratingBar"
-        android:rating="0.0"
-        android:stepSize="1.0"
-        android:clickable="false" />
+        android:clickable="false"
+        android:stepSize="1.0" />
 
     <TextView
+        android:id="@+id/ratingValue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/ratingValue"
         android:layout_gravity="center_horizontal"
+        android:textAlignment="center"
         android:textColor="@color/secondaryText"
-        android:textSize="15sp"
-        android:textAlignment="center" />
+        android:textSize="15sp" />
 
     <EditText
+        android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/title"
-        android:inputType="text"
-        android:textAlignment="center"
         android:layout_gravity="center"
         android:hint="@string/review_title"
-        android:textColorHint="@color/dividerColor"
-        android:textColor="@color/primaryText"
-        android:textSize="15sp" />
-    <EditText
-
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/description"
         android:inputType="text"
         android:textAlignment="center"
+        android:textColor="@color/primaryText"
+        android:textColorHint="@color/dividerColor"
+        android:textSize="15sp" />
+
+    <EditText
+
+        android:id="@+id/description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:hint="@string/review_description"
-        android:textColorHint="@color/dividerColor"
+        android:inputType="text"
+        android:textAlignment="center"
         android:textColor="@color/primaryText"
+        android:textColorHint="@color/dividerColor"
         android:textSize="15sp" />
 
 
     <Button
+        android:id="@+id/reportIssue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/report_defect_txt"
         android:layout_gravity="center"
         android:background="?android:attr/selectableItemBackground"
-        android:textColor="@color/primaryColor"
-        android:id="@+id/reportIssue" />
+        android:text="@string/report_defect_txt"
+        android:textColor="@color/primaryColor" />
 
     <FrameLayout
+        android:id="@+id/fragment_b"
+        android:name="com.sua.tavita.rateapp.FragmentB"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:name="com.sua.tavita.rateapp.FragmentB"
-        android:id="@+id/fragment_b"
         android:layout_gravity="center_vertical"
+        android:layout_weight="0.96"
         tools:layout="@layout/fragment_b" />
-<RelativeLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <Button
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/submit_btn"
-        android:id="@+id/submitBtn"
-        android:background="?android:attr/selectableItemBackground"
-        android:textColor="@color/secondaryText"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" />
-</RelativeLayout>
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="79dp">
+
+        <Button
+            android:id="@+id/submitBtn"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?android:attr/selectableItemBackground"
+            android:text="@string/submit_btn"
+            android:textColor="@color/secondaryText"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+ />
+    </RelativeLayout>
 
 
 </LinearLayout>

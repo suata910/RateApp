@@ -8,4 +8,10 @@
     <color name="primaryText">#212121</color>
     <color name="secondaryText">#ff00ff00</color>
     <color name="dividerColor">#B6B6B6</color>
+    <color name="fiveStars">#8BC34A</color>
+    <color name="fourStars">#4CAF50</color>
+    <color name="threeStars">#FFEB3B</color>
+    <color name="twoStars">#FF9800</color>
+    <color name="oneStar">#FF5722</color>
+
 </resources>

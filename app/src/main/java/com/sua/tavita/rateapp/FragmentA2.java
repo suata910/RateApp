@@ -1,6 +1,9 @@
 package com.sua.tavita.rateapp;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
@@ -13,13 +16,21 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.sua.tavita.rateapp.tables.AppReview;
+import com.sua.tavita.rateapp.tables.Issue;
 import com.sua.tavita.rateapp.tables.User;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 import tabs.SlidingTabLayout;
 
@@ -42,12 +53,19 @@ public class FragmentA2 extends Fragment {
     private UserRepo userRepo;
     private AppRepo appRepo;
     private AppReviewRepo reviewRepo;
+    private IssueRepo issueRepo;
     private String android_id;
     private String ts;
     private int counter;
     private User user;
     private CommunicatorInterface comm;
     private FragmentTransaction ft;
+    private List<Integer> mSelectedItems;
+    private CharSequence[] items = null;
+    private String[] features;
+    private String[] issues;
+    private ArrayList<String> summary = new ArrayList<>();
+    private Fragment fA = new FragmentA();
 
 
     @Override
@@ -79,11 +97,16 @@ public class FragmentA2 extends Fragment {
         android_id = Settings.Secure.getString(getActivity().getContentResolver(),
                 Settings.Secure.ANDROID_ID);
         rating = (RatingBar) rootView.findViewById(R.id.ratingBar);
+        rating.setRating((float)1.0);
         titleTxt = (EditText) rootView.findViewById(R.id.title);
         descTxt = (EditText) rootView.findViewById(R.id.description);
         ratingValue = (TextView) rootView.findViewById(R.id.ratingValue);
         submitBtn = (Button) rootView.findViewById(R.id.submitBtn);
         reportIssue = (Button)rootView.findViewById(R.id.reportIssue);
+        mSelectedItems = new ArrayList<>();
+        features = null;
+        issues = null;
+
         counter = 0;
         setListeners();
         comm.setActionBar("Review");
@@ -92,9 +115,13 @@ public class FragmentA2 extends Fragment {
     }
 
     public void setListeners() {
-        Long tsLong = System.currentTimeMillis() / 1000;
-        ts = tsLong.toString();
-
+        Long tsLong = System.currentTimeMillis();
+        SimpleDateFormat sdf = new SimpleDateFormat("MMM dd,yyyy HH:mm");
+        Date resultdate = new Date(tsLong);
+        titleTxt.setImeOptions(EditorInfo.IME_ACTION_DONE);
+        descTxt.setImeOptions(EditorInfo.IME_ACTION_DONE);
+        ts = resultdate.toString();
+        ratingValue.setText("Hated It");
         rating.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             @Override
             public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
@@ -118,7 +145,15 @@ public class FragmentA2 extends Fragment {
         submitBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                createUser();
+                features = comm.getFeatures().toArray(new String[comm.getFeatures().size()]);
+                issues = comm.getIssues().toArray(new String[comm.getFeatures().size()]);
+                summary.add("Rating: " + String.valueOf(rating.getNumStars()));
+                summary.add("Title: " + titleTxt.getText().toString());
+                summary.add("Description: " + descTxt.getText().toString());
+                summary.add("Features: " + Arrays.toString(features));
+                summary.add("Issues: " + Arrays.toString(issues));
+                items = summary.toArray(new String[summary.size()]);
+                createDialog("Submit Review?", items).show();
             }
 
         });
@@ -172,6 +207,11 @@ public class FragmentA2 extends Fragment {
         createAppReview(user);
     }
 
+    public void addIssues(){
+        issueRepo = new IssueRepo(getActivity());
+        Issue issue = new Issue();
+    }
+
     class MyPagerAdapter extends FragmentPagerAdapter {
         String[] tabs = getResources().getStringArray(R.array.tabs);
 
@@ -198,5 +238,31 @@ public class FragmentA2 extends Fragment {
         public int getCount() {
             return PAGE_COUNT;
         }
+    }
+
+    public Dialog createDialog(final String title, CharSequence[] items) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle(title)
+                .setItems(items, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                    }
+                })
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        createUser();
+                        dialog.dismiss();
+                        comm.replaceFragment(fA);
+                    }
+                }).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+                summary = new ArrayList<String>();
+                dialog.dismiss();
+            }
+        }).setCancelable(false);
+        return builder.create();
     }
 }

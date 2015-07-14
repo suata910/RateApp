@@ -11,7 +11,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.charts.HorizontalBarChart;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
 import com.sua.tavita.rateapp.tables.App;
 
 import java.util.ArrayList;
@@ -25,8 +28,9 @@ public class FragmentA extends Fragment {
     private RecycleViewAdapter adapter;
     private View rootView;
     private AppRepo repo;
+    private AppReviewRepo appReviewRepo;
     private CommunicatorInterface listener;
-    BarChart chart;
+    HorizontalBarChart chart;
 
     public FragmentA() {
 
@@ -39,7 +43,7 @@ public class FragmentA extends Fragment {
             listener = (CommunicatorInterface) activity;
         } catch (ClassCastException castException) {
             /** The activity does not implement the listener. */
-        Log.d("vika", " " + castException);
+            Log.d("vika", " " + castException);
         }
     }
 
@@ -48,9 +52,9 @@ public class FragmentA extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_a, container, false);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.AppList);
-        chart = (BarChart) rootView.findViewById(R.id.chart);
+        chart = (HorizontalBarChart) rootView.findViewById(R.id.barChart);
         adapter = new RecycleViewAdapter(getActivity(), getData());
-//        listener.getDefaultActionBar();
+        listener.getDefaultActionBar();
         return rootView;
 
     }
@@ -68,13 +72,8 @@ public class FragmentA extends Fragment {
             public void onItemClick(View view, int position) {
                 if (savedInstanceState == null) {
 
-////                    ft.add(view.getId(), fragment2).addToBackStack("fragment_a2").commit();
-//
-//                    Intent i = new Intent(getActivity(), AppReview_a.class);
-//                    startActivity(i);
                     Fragment a = new FragmentA2();
                     listener.replaceFragment(a);
-//                    listener.setActionBar("Review");
                     String s = getData().get(position).title;
                     listener.setSelectedApp(s);
                 }
@@ -83,19 +82,56 @@ public class FragmentA extends Fragment {
             @Override
             public void onItemLongClick(View view, int position) {
                 Log.d("vika", "you clicked an item");
-                Fragment a = new FragmentChart();
-                listener.replaceFragment(a);
             }
         }));
-
+//        listener.getDefaultActionBar();
+        createBarGraph(0);
     }
+
+    public void createBarGraph(int aid) {
+        ArrayList<BarEntry> entries = new ArrayList<>();
+        appReviewRepo = new AppReviewRepo(getActivity());
+        ArrayList<Integer> s = appReviewRepo.getNumberStars(aid);
+
+        int i = 0;
+        for (Integer a : s) {
+            entries.add(new BarEntry(a, i));
+            System.out.println("a is " + String.valueOf(a));
+            i++;
+        }
+
+        BarDataSet dataset = new BarDataSet(entries, "");
+
+        ArrayList<String> labels = new ArrayList<>();
+        labels.add("1");
+        labels.add("2");
+        labels.add("3");
+        labels.add("4");
+        labels.add("5");
+
+        chart.setDescription("Number of Stars");
+
+//        dataset.setColors(ColorTemplate.COLORFUL_COLORS);
+        dataset.setColors(new int[]{R.color.oneStar, R.color.twoStars, R.color.threeStars,R.color.fourStars ,R.color.fiveStars}, getActivity());
+        BarData data = new BarData(labels, dataset);
+        chart.setData(data);
+        chart.getXAxis().setDrawGridLines(false);
+        chart.getAxisLeft().setDrawGridLines(false);
+        chart.getAxisRight().setDrawGridLines(false);
+        chart.getAxisRight().setDrawLabels(false);
+        chart.getAxisLeft().setDrawLabels(false);
+        chart.getLegend().setEnabled(false);
+//        chart.animateY(1500);
+    }
+
 
     public List<Information> getData() {
         repo = new AppRepo(getActivity());
         List<App> apps = repo.getAppList();
         List<Information> data = new ArrayList<>();
 
-        int[] icons = {R.drawable.ic_facebook, R.drawable.ic_mytracks};
+//        int[] icons = {R.drawable.ic_facebook, R.drawable.ic_mytracks};
+        int[] icons = {R.drawable.ic_mytracks};
 
         for (int i = 0; i < apps.size() && i < icons.length; i++) {
             Information current = new Information();
