@@ -42,8 +42,8 @@
         <item>weak</item>
     </array>
     <string-array name="tabs">
-        <item>Review</item>
-        <item>Features</item>
+        <item>Facebook</item>
+        <item>MyTracks</item>
     </string-array>
     <string name="title_activity_test">testActivity</string>
     <string name="submit_btn">Submit</string>

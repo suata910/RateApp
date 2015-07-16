@@ -42,7 +42,7 @@ public class DBHelper extends SQLiteOpenHelper {
         } else {
             this.getReadableDatabase();
             try {
-                CopyDataBase();
+                copyDataBase();
             } catch (IOException e) {
                 Toast.makeText(myContext, e.getMessage(), Toast.LENGTH_SHORT).show();
                 Log.d("Create DB", e.getMessage());
@@ -67,7 +67,7 @@ public class DBHelper extends SQLiteOpenHelper {
         return checkDB != null ? true : false;
     }
 
-    private void CopyDataBase() throws IOException {
+    private void copyDataBase() throws IOException {
         InputStream databaseInput = null;
         Resources resources = myContext.getResources();
         String outFileName = DB_PATH + DB_NAME;
@@ -108,8 +108,14 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-
+    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
+        if(newVersion > oldVersion){
+            try {
+                copyDataBase();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 }

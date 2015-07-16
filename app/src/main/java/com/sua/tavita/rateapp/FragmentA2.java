@@ -22,6 +22,7 @@ import android.widget.EditText;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.sua.tavita.rateapp.Fragments.FacebookFragment;
 import com.sua.tavita.rateapp.tables.AppReview;
 import com.sua.tavita.rateapp.tables.Issue;
 import com.sua.tavita.rateapp.tables.User;
@@ -65,7 +66,7 @@ public class FragmentA2 extends Fragment {
     private String[] features;
     private String[] issues;
     private ArrayList<String> summary = new ArrayList<>();
-    private Fragment fA = new FragmentA();
+    private Fragment fA = new FacebookFragment();
 
 
     @Override
@@ -89,7 +90,7 @@ public class FragmentA2 extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_a2, container, false);
 //        mTabs = (SlidingTabLayout) findViewById(R.id.tabs);
 //        mPager = (ViewPager) findViewById(R.id.pager);
-//        mPager.setAdapter(new MyPagerAdapter(getSupportFragmentManager()));
+//        mPager.setAdapter(new ViewPagerAdapter(getSupportFragmentManager()));
 //        mTabs.setDistributeEvenly(true);
 //        mTabs.setBackgroundColor(getResources().getColor(R.color.primaryColor));
 //        mTabs.setSelectedIndicatorColors(getResources().getColor(R.color.accentColor));
@@ -227,7 +228,7 @@ public class FragmentA2 extends Fragment {
         public Fragment getItem(int position) {
             Fragment fragment = null;
             if (position == 0) {
-                fragment = new FragmentA(); //outer fragment
+                fragment = new FacebookFragment(); //outer fragment
             } else {
                 fragment = new FragmentB();
             }

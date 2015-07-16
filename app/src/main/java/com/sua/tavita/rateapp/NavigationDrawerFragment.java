@@ -2,11 +2,11 @@ package com.sua.tavita.rateapp;
 
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,16 +17,38 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.sua.tavita.rateapp.tables.App;
+
 import java.util.ArrayList;
 import java.util.List;
 
 
-/**
- * A simple {@link Fragment} subclass.
- */
+    /*
+    STEPS TO HANDLE THE RECYCLER CLICK
+
+    1 Create a class that EXTENDS RecylcerView.OnItemTouchListener
+
+    2 Create an interface inside that class that supports click and long click and indicates the View that was clicked and the position where it was clicked
+
+    3 Create a GestureDetector to detect ACTION_UP single tap and Long Press events
+
+    4 Return true from the singleTap to indicate your GestureDetector has consumed the event.
+
+    5 Find the childView containing the coordinates specified by the MotionEvent and if the childView is not null and the listener is not null either, fire a long click event
+
+    6 Use the onInterceptTouchEvent of your RecyclerView to check if the childView is not null, the listener is not null and the gesture detector consumed the touch event
+
+    7 if above condition holds true, fire the click event
+
+    8 return false from the onInterceptedTouchEvent to give a chance to the childViews of the RecyclerView to process touch events if any.
+
+    9 Add the onItemTouchListener object for our RecyclerView that uses our class created in step 1
+     */
+
 public class NavigationDrawerFragment extends Fragment {
     private RecyclerView recyclerView;
     private RecycleViewAdapter adapter;
+    private AppRepo repo;
 
     private static final String PREF_FILE_NAME = "testpreferences";
     private static final String KEY_USER_LEARNED_DRAWER = "user_learned_drawer";
@@ -70,8 +92,9 @@ public class NavigationDrawerFragment extends Fragment {
         recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                Intent i = new Intent();
-                i.setClass(getActivity(), MainActivity.class);
+                mDrawerLayout.closeDrawer(GravityCompat.START);
+                ((MainActivity) getActivity()).onDrawerItemClicked(position);
+//                Fragment fragment = new FacebookFragment();
             }
 
             @Override
@@ -81,21 +104,22 @@ public class NavigationDrawerFragment extends Fragment {
         }));
     }
 
-    public static List<Information> getData() {
+    public List<Information> getData() {
+        repo = new AppRepo(getActivity());
+        List<App> apps = repo.getAppList();
         List<Information> data = new ArrayList<>();
 
-        int[] icons = {R.drawable.ic_number1, R.drawable.ic_number2,
-                R.drawable.ic_number3, R.drawable.ic_number4};
+        int[] icons = {R.drawable.ic_facebook, R.drawable.ic_mytracks};
+//        int[] icons = {R.drawable.ic_facebook};
 
-        String[] titles = {"Item One", "Item Two", "Item Three", "Item Four"};
-
-        for (int i = 0; i < titles.length && i < icons.length; i++) {
+        for (int i = 0; i < apps.size() && i < icons.length; i++) {
             Information current = new Information();
-            current.title = titles[i];
+            App app = repo.getAppByName(apps.get(i).getName());
             current.iconID = icons[i];
+            current.title = apps.get(i).getName();
+            Log.d("vika", current.title);
             data.add(current);
         }
-
         return data;
     }
 

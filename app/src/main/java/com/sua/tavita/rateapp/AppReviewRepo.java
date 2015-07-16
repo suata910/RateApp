@@ -58,4 +58,25 @@ public class AppReviewRepo {
         return  stars;
     }
 
+    public int getAverageRating(int id){
+        int avgRating = 2;
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        AppReview appReview = new AppReview();
+        String selectQuery = "SELECT " + "AVG(" + AppReview.STARS + ")"
+                + " FROM " + AppReview.TABLE
+                + " WHERE " + AppReview.APPLICATION_ID + " = ?";
+        cursor = db.rawQuery(selectQuery, new String[]{String.valueOf(id)});
+        if(cursor.moveToFirst()){
+            do{
+//                stars.add(cursor.getInt(cursor.getColumnIndex("count(*)")));
+
+                avgRating = cursor.getInt(0);
+            }while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        return  avgRating;
+
+    }
+
 }
